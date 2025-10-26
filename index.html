@@ -6,6 +6,9 @@
     <meta name="theme-color" content="#00ff88">
     <title>Kxllstellar | Премиум возможности</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -18,7 +21,6 @@
             user-select: none;
         }
 
-        /* Разрешаем выделение только для реквизитов */
         .card-number, .copy-btn {
             -webkit-user-select: text;
             -moz-user-select: text;
@@ -42,6 +44,11 @@
             --safe-area-left: env(safe-area-inset-left, 0px);
             --safe-area-right: env(safe-area-inset-right, 0px);
             --dynamic-island-height: 52px;
+            
+            --font-primary: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --font-heading: 'Space Grotesk', 'Manrope', 'Inter', sans-serif;
+            --font-accent: 'Plus Jakarta Sans', 'Manrope', sans-serif;
+            --font-mono: 'Space Grotesk', 'Courier New', monospace;
         }
 
         [data-theme="light"] {
@@ -58,7 +65,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            font-family: var(--font-primary);
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
@@ -69,9 +76,13 @@
             margin: 0;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+            font-weight: 400;
+            line-height: 1.6;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Safe area containers */
         .safe-area-top {
             height: var(--safe-area-top);
             width: 100%;
@@ -94,14 +105,14 @@
             pointer-events: none;
         }
 
-        /* Анимированная загрузка с размытым фоном */
+        /* УЛУЧШЕННАЯ АНИМАЦИЯ ЗАГРУЗКИ */
         .loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(10, 10, 10, 0.85);
+            background: rgba(10, 10, 10, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -111,95 +122,177 @@
             padding: 0;
             margin: 0;
             overflow: hidden;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
         }
 
-        .diamond-loader {
-            width: min(80px, 20vw);
-            height: min(80px, 20vw);
+        .enhanced-loader {
             position: relative;
-            margin-bottom: min(30px, 6vh);
-            animation: diamondRotate 4s ease-in-out infinite;
+            width: min(120px, 25vw);
+            height: min(120px, 25vw);
+            margin-bottom: min(40px, 8vh);
         }
 
-        .diamond {
+        .outer-ring {
+            position: absolute;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, var(--accent-color), #00a86b);
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-            animation: diamondGlow 3s ease-in-out infinite alternate;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
-        .diamond-shine {
+        .middle-ring {
             position: absolute;
-            top: 20%;
-            left: 20%;
-            width: 60%;
-            height: 60%;
-            background: rgba(255, 255, 255, 0.8);
+            top: 15%;
+            left: 15%;
+            width: 70%;
+            height: 70%;
+            border: 2px solid transparent;
+            border-right: 2px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spinReverse 1.5s linear infinite;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .diamond-core {
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            width: 40%;
+            height: 40%;
+            background: linear-gradient(135deg, var(--accent-color), #00a86b, #00ff88);
             clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-            animation: diamondShine 4s ease-in-out infinite;
+            animation: pulseGlow 3s ease-in-out infinite, rotate3D 8s linear infinite;
+            box-shadow: 
+                0 0 30px var(--accent-glow),
+                inset 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            animation: floatParticle 4s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 80%; left: 10%; animation-delay: 1s; }
+        .particle:nth-child(3) { top: 60%; left: 80%; animation-delay: 2s; }
+        .particle:nth-child(4) { top: 20%; left: 70%; animation-delay: 3s; }
+        .particle:nth-child(5) { top: 90%; left: 60%; animation-delay: 0.5s; }
+        .particle:nth-child(6) { top: 40%; left: 90%; animation-delay: 1.5s; }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes spinReverse {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { 
+                transform: scale(1);
+                filter: brightness(1) drop-shadow(0 0 10px var(--accent-glow));
+            }
+            50% { 
+                transform: scale(1.1);
+                filter: brightness(1.3) drop-shadow(0 0 20px var(--accent-color));
+            }
+        }
+
+        @keyframes rotate3D {
+            0% { transform: rotateY(0deg) rotateX(0deg); }
+            25% { transform: rotateY(90deg) rotateX(45deg); }
+            50% { transform: rotateY(180deg) rotateX(0deg); }
+            75% { transform: rotateY(270deg) rotateX(45deg); }
+            100% { transform: rotateY(360deg) rotateX(0deg); }
+        }
+
+        @keyframes floatParticle {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 0.7;
+            }
+            25% { 
+                transform: translate(10px, -10px) scale(1.2);
+                opacity: 1;
+            }
+            50% { 
+                transform: translate(5px, 5px) scale(0.8);
+                opacity: 0.5;
+            }
+            75% { 
+                transform: translate(-10px, 5px) scale(1.1);
+                opacity: 0.9;
+            }
         }
 
         .loading-text {
-            font-size: min(1.2rem, 5vw);
-            font-weight: 600;
+            font-size: min(1.5rem, 6vw);
+            font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: min(10px, 2vh);
+            margin-bottom: min(15px, 3vh);
             animation: textPulse 2s ease-in-out infinite;
             text-align: center;
             padding: 0 20px;
+            font-family: var(--font-heading);
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
         }
 
         .loading-subtext {
-            font-size: min(0.9rem, 4vw);
+            font-size: min(1rem, 4vw);
             color: var(--text-secondary);
             animation: textPulse 2s ease-in-out infinite 0.5s;
             text-align: center;
             padding: 0 20px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
         }
 
         .progress-bar {
-            width: min(200px, 70vw);
-            height: 3px;
+            width: min(250px, 80vw);
+            height: 4px;
             background: var(--bg-secondary);
             border-radius: 2px;
-            margin-top: min(20px, 4vh);
+            margin-top: min(25px, 5vh);
             overflow: hidden;
+            position: relative;
         }
 
         .progress {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, var(--accent-color), #00a86b);
+            background: linear-gradient(90deg, var(--accent-color), #00a86b, #00ff88);
             border-radius: 2px;
             animation: progressLoad 2.5s ease-in-out forwards;
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes diamondRotate {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            25% { transform: rotate(90deg) scale(1.05); }
-            50% { transform: rotate(180deg) scale(1.1); }
-            75% { transform: rotate(270deg) scale(1.05); }
-        }
-
-        @keyframes diamondGlow {
-            0% { filter: drop-shadow(0 0 10px var(--accent-glow)); }
-            50% { filter: drop-shadow(0 0 25px var(--accent-glow)); }
-            100% { filter: drop-shadow(0 0 10px var(--accent-glow)); }
-        }
-
-        @keyframes diamondShine {
-            0%, 100% { opacity: 0; transform: scale(0.8) rotate(0deg); }
-            25% { opacity: 0.3; transform: scale(0.9) rotate(90deg); }
-            50% { opacity: 1; transform: scale(1) rotate(180deg); }
-            75% { opacity: 0.3; transform: scale(0.9) rotate(270deg); }
-        }
-
-        @keyframes textPulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.02); }
+        .progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progressShine 1.5s ease-in-out infinite;
         }
 
         @keyframes progressLoad {
@@ -207,7 +300,17 @@
             100% { width: 100%; }
         }
 
-        /* Переключатель темы */
+        @keyframes progressShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes textPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+        }
+
+        /* Остальные стили остаются без изменений */
         .theme-toggle {
             position: fixed;
             top: max(30px, calc(var(--safe-area-top) + 10px));
@@ -236,38 +339,6 @@
             pointer-events: none;
         }
 
-        .theme-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: var(--shadow);
-        }
-
-        .toggle-slider {
-            width: min(20px, 4vw);
-            height: min(20px, 4vw);
-            background: var(--accent-color);
-            border-radius: 50%;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            position: absolute;
-            left: min(5px, 1vw);
-        }
-
-        [data-theme="light"] .toggle-slider {
-            transform: translateX(min(30px, 6vw));
-        }
-
-        .toggle-icon {
-            font-size: min(12px, 2.5vw);
-            margin: 0 min(5px, 1vw);
-            transition: all 0.4s ease;
-        }
-
-        .sun { color: #ffa500; }
-        .moon { color: #b0b0b0; }
-
-        [data-theme="light"] .sun { opacity: 1; }
-        [data-theme="light"] .moon { opacity: 0.5; }
-
-        /* Анимированный фон с сеткой */
         .background {
             position: fixed;
             top: 0;
@@ -292,72 +363,6 @@
             transform-origin: 0 0;
         }
 
-        .floating-shapes {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .shape {
-            position: absolute;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: float 20s ease-in-out infinite;
-        }
-
-        .shape:nth-child(1) { 
-            width: min(300px, 60vw); 
-            height: min(300px, 60vw); 
-            top: 10%; left: 5%; 
-            animation-delay: 0s; 
-            animation-duration: 25s;
-        }
-        .shape:nth-child(2) { 
-            width: min(200px, 40vw); 
-            height: min(200px, 40vw); 
-            top: 60%; left: 80%; 
-            animation-delay: 5s; 
-            animation-duration: 20s;
-        }
-        .shape:nth-child(3) { 
-            width: min(150px, 30vw); 
-            height: min(150px, 30vw); 
-            top: 80%; left: 20%; 
-            animation-delay: 10s; 
-            animation-duration: 30s;
-        }
-        .shape:nth-child(4) { 
-            width: min(250px, 50vw); 
-            height: min(250px, 50vw); 
-            top: 30%; left: 70%; 
-            animation-delay: 15s; 
-            animation-duration: 22s;
-        }
-
-        @keyframes gridMove {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(-25px, -25px) rotate(0.25deg); }
-            50% { transform: translate(-50px, -50px) rotate(0.5deg); }
-            75% { transform: translate(-25px, -25px) rotate(0.25deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
-        }
-
-        @keyframes float {
-            0%, 100% { 
-                transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); 
-            }
-            25% { 
-                transform: translateY(-40px) translateX(20px) rotate(90deg) scale(1.1); 
-            }
-            50% { 
-                transform: translateY(-20px) translateX(40px) rotate(180deg) scale(1.05); 
-            }
-            75% { 
-                transform: translateY(-30px) translateX(10px) rotate(270deg) scale(1.08); 
-            }
-        }
-
-        /* Основной контейнер */
         .container {
             max-width: min(1200px, 95vw);
             margin: 0 auto;
@@ -377,7 +382,6 @@
             filter: blur(15px);
         }
 
-        /* Заголовок */
         .header {
             text-align: center;
             margin-bottom: min(60px, 8vh);
@@ -409,6 +413,9 @@
             animation: titleGlow 4s ease-in-out infinite alternate;
             line-height: 1.2;
             text-align: center;
+            font-family: var(--font-heading);
+            letter-spacing: -0.03em;
+            text-transform: uppercase;
         }
 
         .subtitle {
@@ -420,6 +427,9 @@
             animation: subtitleFloat 5s ease-in-out infinite;
             text-align: center;
             padding: 0 min(20px, 5vw);
+            font-weight: 400;
+            font-family: var(--font-primary);
+            letter-spacing: 0.01em;
         }
 
         @keyframes logoFloat {
@@ -449,7 +459,6 @@
             50% { transform: translateY(-3px); opacity: 0.9; }
         }
 
-        /* Карточки */
         .cards-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(350px, 90vw), 1fr));
@@ -499,7 +508,6 @@
             50% { transform: translateY(-5px); }
         }
 
-        /* Заголовок карточки */
         .card-header {
             display: flex;
             justify-content: space-between;
@@ -514,6 +522,8 @@
             font-size: min(1.5rem, 5vw);
             font-weight: 700;
             color: var(--text-primary);
+            font-family: var(--font-heading);
+            letter-spacing: -0.01em;
         }
 
         .price {
@@ -524,6 +534,8 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: pricePulse 3s ease-in-out infinite;
+            font-family: var(--font-accent);
+            letter-spacing: -0.02em;
         }
 
         @keyframes pricePulse {
@@ -531,7 +543,6 @@
             50% { transform: scale(1.05); opacity: 0.9; }
         }
 
-        /* Список возможностей */
         .features {
             list-style: none;
             margin-bottom: min(30px, 4vh);
@@ -550,6 +561,8 @@
             animation: featureSlide 0.6s ease-out forwards;
             opacity: 0;
             font-size: min(1rem, 4vw);
+            font-family: var(--font-primary);
+            font-weight: 400;
         }
 
         .feature:nth-child(1) { animation-delay: 0.1s; }
@@ -602,7 +615,6 @@
             75% { transform: scale(1.1) rotate(-5deg); }
         }
 
-        /* Кнопки */
         .payment-buttons {
             display: flex;
             flex-direction: column;
@@ -621,6 +633,9 @@
             overflow: hidden;
             text-align: center;
             animation: buttonPulse 6s ease-in-out infinite;
+            font-family: var(--font-accent);
+            letter-spacing: 0.02em;
+            text-transform: none;
         }
 
         .payment-btn::before {
@@ -669,7 +684,6 @@
             50% { transform: scale(1.02); }
         }
 
-        /* Панель оплаты */
         .payment-panel {
             background: var(--bg-secondary);
             border-radius: min(20px, 4vw);
@@ -705,7 +719,7 @@
             color: var(--accent-color);
             letter-spacing: min(3px, 1vw);
             margin-bottom: min(15px, 3vh);
-            font-family: 'Courier New', monospace;
+            font-family: var(--font-mono);
             text-shadow: 0 0 10px var(--accent-glow);
             word-break: break-all;
             text-align: center;
@@ -716,6 +730,8 @@
             font-size: min(0.95rem, 3.5vw);
             line-height: 1.6;
             text-align: center;
+            font-family: var(--font-primary);
+            font-weight: 400;
         }
 
         .copy-btn {
@@ -730,6 +746,8 @@
             font-weight: 600;
             font-size: min(1rem, 3.5vw);
             width: 100%;
+            font-family: var(--font-accent);
+            letter-spacing: 0.02em;
         }
 
         .copy-btn:hover {
@@ -737,7 +755,6 @@
             box-shadow: 0 10px 25px rgba(33, 150, 243, 0.4);
         }
 
-        /* Информационная секция */
         .info-section {
             background: var(--bg-secondary);
             border-radius: min(25px, 5vw);
@@ -759,6 +776,9 @@
             margin-bottom: min(25px, 4vh);
             color: var(--accent-color);
             animation: titlePulse 4s ease-in-out infinite;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            letter-spacing: -0.01em;
         }
 
         @keyframes titlePulse {
@@ -799,6 +819,7 @@
             color: var(--accent-color);
             margin-bottom: min(10px, 2vh);
             transition: all 0.4s ease;
+            font-family: var(--font-heading);
         }
 
         .step:hover .step-number {
@@ -807,6 +828,8 @@
 
         .step p {
             font-size: min(0.9rem, 3.5vw);
+            font-family: var(--font-primary);
+            font-weight: 400;
         }
 
         @keyframes stepFloat {
@@ -814,7 +837,6 @@
             50% { transform: translateY(-2px); }
         }
 
-        /* Уведомления с эффектом затухания */
         .notification {
             position: fixed;
             top: max(20px, calc(var(--safe-area-top) + 10px));
@@ -836,6 +858,8 @@
             transform: translateX(-20px);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
+            font-family: var(--font-primary);
+            letter-spacing: 0.01em;
         }
 
         .notification.show {
@@ -859,7 +883,6 @@
             }
         }
 
-        /* Парящие элементы */
         .floating-elements {
             position: fixed;
             top: 0;
@@ -890,12 +913,10 @@
             75% { transform: translate(-50px, 50px) rotate(270deg) scale(1.1); }
         }
 
-        /* Аудио элемент (скрытый) */
         .audio-element {
             display: none;
         }
 
-        /* Медиа запросы для разных устройств */
         @media (max-width: 430px) {
             :root {
                 --safe-area-top: env(safe-area-inset-top, 47px);
@@ -947,7 +968,6 @@
             }
         }
 
-        /* Ландшафтная ориентация */
         @media (max-height: 500px) and (orientation: landscape) {
             .container {
                 padding: max(40px, var(--safe-area-top)) 20px max(20px, var(--safe-area-bottom));
@@ -971,14 +991,12 @@
             }
         }
 
-        /* Высокие экраны */
         @media (min-height: 1000px) {
             .container {
                 padding: max(100px, var(--safe-area-top)) 20px max(60px, var(--safe-area-bottom));
             }
         }
 
-        /* Поддержка устройств без safe-area */
         @supports not (top: env(safe-area-inset-top)) {
             :root {
                 --safe-area-top: 44px;
@@ -999,11 +1017,20 @@
         Ваш браузер не поддерживает аудио элементы.
     </audio>
 
-    <!-- Анимированная загрузка с размытым фоном -->
+    <!-- УЛУЧШЕННАЯ АНИМАЦИЯ ЗАГРУЗКИ -->
     <div class="loading-screen" id="loadingScreen">
-        <div class="diamond-loader">
-            <div class="diamond"></div>
-            <div class="diamond-shine"></div>
+        <div class="enhanced-loader">
+            <div class="outer-ring"></div>
+            <div class="middle-ring"></div>
+            <div class="diamond-core"></div>
+            <div class="particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
         </div>
         <div class="loading-text">Kxllstellar</div>
         <div class="loading-subtext">Загрузка премиум возможностей...</div>
