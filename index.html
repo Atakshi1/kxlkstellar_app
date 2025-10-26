@@ -1171,8 +1171,9 @@
     <div class="safe-area-bottom"></div>
 
     <!-- Аудио элемент -->
-    <audio class="audio-element" id="backgroundMusic" loop autoplay>
-        <source src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3" type="audio/mpeg">
+    <audio class="audio-element" id="backgroundMusic" loop>
+        <source src="audio.mp3" type="audio/mpeg">
+        <source src="audio.ogg" type="audio/ogg">
         Ваш браузер не поддерживает аудио элементы.
     </audio>
 
@@ -1355,22 +1356,37 @@
             });
         }
 
-        // Новая функция управления музыкой
+        // Улучшенная функция управления музыкой
         function initMusic() {
             const audio = document.getElementById('backgroundMusic');
             
-            // Автоматическое включение музыки после загрузки
+            // Для iOS и Safari - ждем первого взаимодействия
+            const startMusic = () => {
+                if (!isMusicPlaying) {
+                    playMusic();
+                    document.removeEventListener('click', startMusic);
+                    document.removeEventListener('touchstart', startMusic);
+                }
+            };
+            
+            // Добавляем обработчики для первого взаимодействия
+            document.addEventListener('click', startMusic);
+            document.addEventListener('touchstart', startMusic);
+            
+            // Автоматическое включение музыки после загрузки для других браузеров
             setTimeout(() => {
-                playMusic();
-            }, 1500);
+                if (!isMusicPlaying) {
+                    playMusic();
+                }
+            }, 2000);
 
             // Обработчик изменения видимости вкладки
             document.addEventListener('visibilitychange', function() {
                 if (document.hidden) {
-                    // Останавливаем музыку когда вкладка не активна
+                    // Плавно выключаем музыку когда вкладка не активна
                     pauseMusic();
                 } else {
-                    // Возобновляем музыку когда вкладка активна
+                    // Плавно включаем музыку когда вкладка активна
                     if (isMusicPlaying) {
                         setTimeout(() => {
                             playMusic();
@@ -1413,6 +1429,11 @@
                     }).catch(error => {
                         console.log('Autoplay prevented:', error);
                         isMusicPlaying = false;
+                        
+                        // Показываем уведомление о необходимости взаимодействия для iOS
+                        if (isIOS()) {
+                            showNotification('🎵 Нажмите на экран для включения музыки');
+                        }
                     });
                 }
             }
@@ -1459,6 +1480,19 @@
                 }
                 audio.volume = volume;
             }, 100);
+        }
+
+        // Проверка iOS устройства
+        function isIOS() {
+            return [
+                'iPad Simulator',
+                'iPhone Simulator',
+                'iPod Simulator',
+                'iPad',
+                'iPhone',
+                'iPod'
+            ].includes(navigator.platform) ||
+            (navigator.userAgent.includes("Mac") && "ontouchend" in document);
         }
 
         // Управление темой
