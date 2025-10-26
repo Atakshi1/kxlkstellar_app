@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#00ff88">
     <title>Kxllstellar | Премиум возможности</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -57,7 +58,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
@@ -66,6 +67,8 @@
             transition: all 0.5s ease;
             padding: 0;
             margin: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* Safe area containers */
@@ -991,8 +994,8 @@
 
     <!-- Аудио элемент -->
     <audio class="audio-element" id="backgroundMusic" loop>
-        <source src="/audio.mp3" type="audio/mpeg">
-        <source src="/audio.ogg" type="audio/ogg">
+        <source src="audio.mp3" type="audio/mpeg">
+        <source src="audio.ogg" type="audio/ogg">
         Ваш браузер не поддерживает аудио элементы.
     </audio>
 
@@ -1144,7 +1147,6 @@
         let audioFadeInterval;
         let lastScrollY = 0;
         let isScrollingDown = false;
-        let scrollTimeout;
 
         // Инициализация скролла для кнопок
         function initScrollBehavior() {
@@ -1178,7 +1180,7 @@
             // Автоматическое включение музыки после загрузки
             setTimeout(() => {
                 playMusic();
-            }, 1000);
+            }, 1500);
 
             // Обработчик изменения видимости вкладки
             document.addEventListener('visibilitychange', function() {
@@ -1188,7 +1190,9 @@
                 } else {
                     // Возобновляем музыку когда вкладка активна
                     if (isMusicPlaying) {
-                        playMusic();
+                        setTimeout(() => {
+                            playMusic();
+                        }, 500);
                     }
                 }
             });
@@ -1200,17 +1204,27 @@
 
             window.addEventListener('pageshow', function() {
                 if (isMusicPlaying) {
+                    setTimeout(() => {
+                        playMusic();
+                    }, 500);
+                }
+            });
+
+            // Обработчик первого взаимодействия для автовоспроизведения
+            document.addEventListener('click', function firstInteraction() {
+                if (!isMusicPlaying) {
                     playMusic();
                 }
+                document.removeEventListener('click', firstInteraction);
             });
         }
 
         function playMusic() {
             const audio = document.getElementById('backgroundMusic');
             
-            if (audio.paused) {
+            if (audio.paused && !isMusicPlaying) {
                 // Устанавливаем низкую громкость для плавного включения
-                audio.volume = 0.3;
+                audio.volume = 0.1;
                 
                 // Пытаемся воспроизвести с обработкой ошибок
                 const playPromise = audio.play();
@@ -1225,6 +1239,9 @@
                     }).catch(error => {
                         console.log('Autoplay prevented:', error);
                         isMusicPlaying = false;
+                        
+                        // Показываем уведомление о необходимости взаимодействия
+                        showNotification('🎵 Нажмите на экран для включения музыки');
                     });
                 }
             }
@@ -1233,13 +1250,13 @@
         function pauseMusic() {
             const audio = document.getElementById('backgroundMusic');
             
-            if (!audio.paused) {
+            if (!audio.paused && isMusicPlaying) {
                 // Плавное уменьшение громкости перед паузой
                 fadeOutMusic();
                 setTimeout(() => {
                     audio.pause();
                     isMusicPlaying = false;
-                }, 600);
+                }, 500);
             }
         }
 
@@ -1255,7 +1272,7 @@
                     clearInterval(audioFadeInterval);
                 }
                 audio.volume = volume;
-            }, 50);
+            }, 100);
         }
 
         function fadeOutMusic() {
@@ -1270,22 +1287,24 @@
                     clearInterval(audioFadeInterval);
                 }
                 audio.volume = volume;
-            }, 50);
+            }, 100);
         }
 
         // Управление темой
         function initTheme() {
             const themeToggle = document.getElementById('themeToggle');
-            // Всегда темная тема по умолчанию
-            const currentTheme = 'dark';
             
-            document.body.setAttribute('data-theme', currentTheme);
-            localStorage.setItem('theme', currentTheme);
+            // Загружаем тему из localStorage или устанавливаем темную по умолчанию
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
             
             themeToggle.addEventListener('click', () => {
-                const newTheme = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                const currentTheme = document.body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
                 document.body.setAttribute('data-theme', newTheme);
                 localStorage.setItem('theme', newTheme);
+                
                 showNotification(newTheme === 'dark' ? '🌙 Темная тема включена' : '☀️ Светлая тема включена');
             });
         }
@@ -1420,11 +1439,6 @@
             `;
             document.head.appendChild(style);
         });
-
-        // Предотвращение масштабирования на iOS
-        document.addEventListener('touchmove', function (event) {
-            if (event.scale !== 1) { event.preventDefault(); }
-        }, { passive: false });
 
         // Совместимость с Safari и другими браузерами
         window.addEventListener('load', function() {
