@@ -3,6 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- PWA Мета-теги -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Модератор Бота">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Премиум возможности для вашего бота ВКонтакте">
+    
+    <!-- PWA Манифест -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Иконки для PWA -->
+    <link rel="icon" type="image/png" href="/icon-192.png">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    
     <title>Модератор Бота</title>
     <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
     <style>
@@ -37,8 +53,8 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-primary);
-            width: 911px;
-            height: 700px;
+            width: 100%;
+            height: 100vh;
             overflow: hidden;
             display: flex;
             justify-content: center;
@@ -211,7 +227,9 @@
 
         .app-container {
             width: 100%;
+            max-width: 911px;
             height: 100%;
+            max-height: 700px;
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -870,6 +888,42 @@
             }, 3000);
         }
 
+        // PWA функционал
+        function initPWA() {
+            // Проверяем, запущено ли как PWA
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                console.log('✅ Запущено как PWA');
+                document.body.classList.add('pwa-mode');
+            }
+            
+            // Обработчик установки PWA
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                console.log('PWA доступно для установки');
+            });
+        }
+
+        // Инициализация VK Bridge
+        function initVKBridge() {
+            if (typeof vkBridge !== 'undefined') {
+                vkBridge.send('VKWebAppInit')
+                    .then(() => {
+                        console.log('✅ VK Bridge инициализирован');
+                        // Настройки интерфейса для VK
+                        vkBridge.send('VKWebAppSetViewSettings', {
+                            status_bar_style: 'light',
+                            action_bar_color: '#667eea',
+                            navigation_bar_color: '#667eea'
+                        });
+                    })
+                    .catch(error => {
+                        console.log('VK Bridge не доступен, работаем в браузере');
+                    });
+            }
+        }
+
         // Инициализация приложения
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Premium Mini App загружен!');
@@ -880,12 +934,11 @@
             // Запуск анимированной загрузки
             initLoading();
             
-            // Инициализация VK Bridge если доступен
-            if (typeof vkBridge !== 'undefined') {
-                vkBridge.send('VKWebAppInit').then(() => {
-                    console.log('✅ VK Bridge инициализирован');
-                }).catch(console.log);
-            }
+            // Инициализация VK Bridge
+            initVKBridge();
+            
+            // Инициализация PWA
+            initPWA();
 
             // Добавляем стили для анимаций
             const style = document.createElement('style');
@@ -893,6 +946,13 @@
                 @keyframes fadeInUp {
                     from { opacity: 0; transform: translateY(20px); }
                     to { opacity: 1; transform: translateY(0); }
+                }
+                
+                /* Стили для PWA режима */
+                .pwa-mode {
+                    -webkit-user-select: none;
+                    -webkit-touch-callout: none;
+                    -webkit-tap-highlight-color: transparent;
                 }
             `;
             document.head.appendChild(style);
