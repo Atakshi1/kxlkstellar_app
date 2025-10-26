@@ -1142,22 +1142,33 @@
         };
 
         // Управление музыкой
-        let isMusicPlaying = false;
+        let isMusicPlaying = true; // Музыка включена по умолчанию
         let audioFadeInterval;
+        let isUserInteracted = false;
 
         function initMusic() {
             const musicToggle = document.getElementById('musicToggle');
             const audio = document.getElementById('backgroundMusic');
             
-            // Пытаемся включить музыку автоматически после взаимодействия
-            document.addEventListener('click', function initAudio() {
-                if (!isMusicPlaying) {
+            // Автоматическое включение музыки после загрузки
+            setTimeout(() => {
+                if (!isUserInteracted) {
                     playMusic();
                 }
-                document.removeEventListener('click', initAudio);
+            }, 1000);
+
+            // Обработчик клика для первого взаимодействия
+            document.addEventListener('click', function initAudio() {
+                if (!isUserInteracted) {
+                    isUserInteracted = true;
+                    if (!isMusicPlaying) {
+                        playMusic();
+                    }
+                }
             }, { once: true });
 
             musicToggle.addEventListener('click', function() {
+                isUserInteracted = true;
                 if (isMusicPlaying) {
                     stopMusic();
                 } else {
@@ -1165,17 +1176,22 @@
                 }
             });
 
-            // Управление видимостью страницы для паузы музыки
+            // Отключаем автоматическую паузу при скрытии вкладки
+            // Музыка продолжает играть даже когда браузер свернут
             document.addEventListener('visibilitychange', function() {
-                if (document.hidden) {
-                    // Страница скрыта - плавно выключаем музыку
-                    fadeOutMusic();
-                } else {
-                    // Страница видна - плавно включаем музыку
-                    if (isMusicPlaying) {
-                        fadeInMusic();
-                    }
-                }
+                // Не делаем ничего - музыка продолжает играть
+                console.log('Visibility changed, but music continues playing');
+            });
+
+            // Обработчик для Safari и мобильных браузеров
+            window.addEventListener('pagehide', function() {
+                // Сохраняем состояние музыки, но не останавливаем
+                console.log('Page hide, music state preserved');
+            });
+
+            window.addEventListener('pageshow', function() {
+                // Восстанавливаем состояние музыки если нужно
+                console.log('Page show, music state:', isMusicPlaying);
             });
         }
 
@@ -1183,22 +1199,31 @@
             const audio = document.getElementById('backgroundMusic');
             const musicToggle = document.getElementById('musicToggle');
             
-            audio.volume = 0;
-            audio.play().then(() => {
-                isMusicPlaying = true;
-                musicToggle.classList.remove('muted');
-                fadeInMusic();
-                showNotification('🎵 Музыка включена');
-            }).catch(error => {
-                console.log('Ошибка воспроизведения музыки:', error);
-                showNotification('❌ Не удалось включить музыку');
-            });
+            // Устанавливаем низкую громкость для плавного включения
+            audio.volume = 0.3;
+            
+            // Пытаемся воспроизвести с обработкой ошибок
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isMusicPlaying = true;
+                    musicToggle.classList.remove('muted');
+                    console.log('Music started playing');
+                }).catch(error => {
+                    console.log('Autoplay prevented:', error);
+                    // Показываем кнопку для ручного включения
+                    musicToggle.style.display = 'flex';
+                    showNotification('🎵 Нажмите для включения музыки');
+                });
+            }
         }
 
         function stopMusic() {
             const audio = document.getElementById('backgroundMusic');
             const musicToggle = document.getElementById('musicToggle');
             
+            // Плавное уменьшение громкости
             fadeOutMusic();
             setTimeout(() => {
                 audio.pause();
@@ -1387,6 +1412,14 @@
         document.addEventListener('touchmove', function (event) {
             if (event.scale !== 1) { event.preventDefault(); }
         }, { passive: false });
+
+        // Совместимость с Safari и другими браузерами
+        // Убедимся, что аудио работает в разных браузерах
+        window.addEventListener('load', function() {
+            const audio = document.getElementById('backgroundMusic');
+            // Предзагрузка аудио для лучшей производительности
+            audio.load();
+        });
     </script>
 </body>
 </html>
