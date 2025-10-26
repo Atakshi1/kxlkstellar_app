@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#00ff88">
-    <title>Kxllstellar | Project</title>
+    <title>Kxllstellar | Премиум возможности</title>
     <!-- Новые шрифты -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -415,7 +415,7 @@
             border: 3px solid transparent;
             border-top: 3px solid var(--accent-color);
             border-radius: 50%;
-            animation: spin 2s linear infinite;
+            animation: spin 4s linear infinite;
             box-shadow: 0 0 20px var(--accent-glow);
         }
 
@@ -428,7 +428,7 @@
             border: 2px solid transparent;
             border-right: 2px solid var(--accent-color);
             border-radius: 50%;
-            animation: spinReverse 1.5s linear infinite;
+            animation: spinReverse 3s linear infinite;
             box-shadow: 0 0 15px var(--accent-glow);
         }
 
@@ -440,10 +440,28 @@
             height: 40%;
             background: linear-gradient(135deg, var(--accent-color), #00a86b, #00ff88);
             clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-            animation: pulseGlow 3s ease-in-out infinite, rotate3D 8s linear infinite;
+            animation: diamondGlow 3s ease-in-out infinite, diamondFloat 6s ease-in-out infinite;
             box-shadow: 
                 0 0 30px var(--accent-glow),
                 inset 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes diamondGlow {
+            0%, 100% { 
+                transform: scale(1);
+                filter: brightness(1) drop-shadow(0 0 10px var(--accent-glow));
+            }
+            50% { 
+                transform: scale(1.1);
+                filter: brightness(1.3) drop-shadow(0 0 20px var(--accent-color));
+            }
+        }
+
+        @keyframes diamondFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-5px) rotate(5deg); }
+            50% { transform: translateY(0px) rotate(0deg); }
+            75% { transform: translateY(-3px) rotate(-5deg); }
         }
 
         .logo-text {
@@ -984,33 +1002,78 @@
             display: none;
         }
 
-        @media (max-width: 430px) {
-            :root {
-                --safe-area-top: env(safe-area-inset-top, 47px);
-                --dynamic-island-height: 59px;
-            }
-        }
-
-        @media (max-width: 390px) {
-            :root {
-                --safe-area-top: env(safe-area-inset-top, 44px);
-                --dynamic-island-height: 52px;
-            }
-        }
-
-        @media (max-width: 375px) {
-            :root {
-                --safe-area-top: env(safe-area-inset-top, 44px);
-                --dynamic-island-height: 52px;
-            }
-            
+        @media (max-width: 768px) {
             .container {
                 padding: max(60px, var(--safe-area-top)) 15px max(30px, var(--safe-area-bottom));
             }
             
-            .notification {
-                font-size: min(0.7rem, 2.8vw);
-                padding: min(6px, 1.5vw) min(10px, 2.5vw);
+            .logo-text {
+                font-size: min(2.8rem, 10vw);
+            }
+            
+            .subtitle {
+                font-size: min(1rem, 4vw);
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: min(20px, 3vh);
+            }
+            
+            .card {
+                padding: min(25px, 5vw);
+            }
+            
+            .payment-btn {
+                font-size: min(1rem, 3.5vw);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: max(50px, var(--safe-area-top)) 10px max(25px, var(--safe-area-bottom));
+            }
+            
+            .logo-text {
+                font-size: min(2.2rem, 9vw);
+                padding: 8px 15px;
+            }
+            
+            .subtitle {
+                font-size: min(0.9rem, 3.5vw);
+                padding: 0 10px;
+            }
+            
+            .card {
+                padding: min(20px, 4vw);
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: min(10px, 2vh);
+            }
+            
+            .price {
+                font-size: min(2rem, 7vw);
+            }
+            
+            .feature {
+                font-size: min(0.9rem, 3.5vw);
+            }
+            
+            .payment-btn {
+                padding: min(15px, 3vh) min(20px, 4vw);
+                font-size: min(0.9rem, 3.5vw);
+            }
+            
+            .info-section {
+                padding: min(25px, 5vw);
+            }
+            
+            .info-steps {
+                grid-template-columns: 1fr;
+                gap: min(15px, 2vh);
             }
         }
 
@@ -1021,11 +1084,16 @@
             }
             
             .container {
-                padding: max(50px, var(--safe-area-top)) 12px max(25px, var(--safe-area-bottom));
+                padding: max(40px, var(--safe-area-top)) 8px max(20px, var(--safe-area-bottom));
+            }
+            
+            .logo-text {
+                font-size: min(1.8rem, 8vw);
+                padding: 5px 10px;
             }
             
             .card {
-                padding: 20px 15px;
+                padding: 15px 10px;
             }
             
             .notification {
@@ -1079,8 +1147,7 @@
 
     <!-- Аудио элемент -->
     <audio class="audio-element" id="backgroundMusic" loop>
-        <source src="audio.mp3" type="audio/mpeg">
-        <source src="audio.ogg" type="audio/ogg">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3" type="audio/mpeg">
         Ваш браузер не поддерживает аудио элементы.
     </audio>
 
@@ -1307,14 +1374,6 @@
                     }, 500);
                 }
             });
-
-            // Обработчик первого взаимодействия для автовоспроизведения
-            document.addEventListener('click', function firstInteraction() {
-                if (!isMusicPlaying) {
-                    playMusic();
-                }
-                document.removeEventListener('click', firstInteraction);
-            });
         }
 
         function playMusic() {
@@ -1337,9 +1396,6 @@
                     }).catch(error => {
                         console.log('Autoplay prevented:', error);
                         isMusicPlaying = false;
-                        
-                        // Показываем уведомление о необходимости взаимодействия
-                        showNotification('🎵 Нажмите на экран для включения музыки');
                     });
                 }
             }
