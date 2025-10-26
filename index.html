@@ -1523,6 +1523,26 @@
             audio.load();
         });
 
+        // Защита от копирования и инспектирования
+        // Блокировка контекстного меню
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            showNotification('🚫 Контекстное меню отключено');
+        });
+
+        // Блокировка клавиш F12, Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+U
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                (e.ctrlKey && e.key === 'u')
+            ) {
+                e.preventDefault();
+                showNotification('🚫 Инспектирование отключено');
+            }
+        });
+
         // Защита от копирования текста (только для реквизитов)
         document.addEventListener('copy', function(e) {
             // Разрешаем копирование только из элементов с классом project-description или project-btn
