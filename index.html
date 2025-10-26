@@ -312,20 +312,20 @@
             50% { opacity: 0.8; transform: scale(1.02); }
         }
 
-        /* Остальные стили остаются без изменений */
+        /* КРУГЛЫЙ ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ */
         .theme-toggle {
             position: fixed;
             top: max(30px, calc(var(--safe-area-top) + 10px));
             right: max(20px, var(--safe-area-right));
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 50px;
-            width: min(60px, 12vw);
-            height: min(30px, 6vw);
+            border-radius: 50%;
+            width: min(50px, 10vw);
+            height: min(50px, 10vw);
             cursor: pointer;
             display: flex;
             align-items: center;
-            padding: min(5px, 1vw);
+            justify-content: center;
             z-index: 1000;
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: blur(20px);
@@ -333,6 +333,12 @@
             opacity: 1;
             transform: translateY(0);
             transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
         .theme-toggle.hidden {
@@ -341,6 +347,12 @@
             pointer-events: none;
         }
 
+        .theme-toggle-icon {
+            font-size: min(1.5rem, 5vw);
+            transition: all 0.3s ease;
+        }
+
+        /* УЛУЧШЕННЫЙ ФОН */
         .background {
             position: fixed;
             top: 0;
@@ -348,7 +360,8 @@
             width: 100%;
             height: 100%;
             z-index: -2;
-            opacity: 0.4;
+            opacity: 0.6;
+            overflow: hidden;
         }
 
         .grid-lines {
@@ -361,8 +374,29 @@
                 linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
                 linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
             background-size: min(50px, 10vw) min(50px, 10vw);
-            animation: gridMove 25s linear infinite;
+            animation: gridMove 40s linear infinite;
             transform-origin: 0 0;
+            transition: all 0.5s ease;
+        }
+
+        .grid-distortion {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                transparent 0%, 
+                rgba(0, 255, 136, 0.1) 30%, 
+                transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50px, -50px); }
         }
 
         .container {
@@ -403,65 +437,55 @@
 
         .logo-animation {
             position: relative;
-            width: min(120px, 25vw);
-            height: min(120px, 25vw);
+            width: min(180px, 35vw);
+            height: min(180px, 35vw);
             margin-bottom: min(20px, 4vh);
         }
 
-        .logo-animation .outer-ring {
+        .diamond-frame {
             position: absolute;
             width: 100%;
             height: 100%;
-            border: 3px solid transparent;
-            border-top: 3px solid var(--accent-color);
-            border-radius: 50%;
-            animation: spin 4s linear infinite;
-            box-shadow: 0 0 20px var(--accent-glow);
+            border: 3px solid var(--accent-color);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            box-shadow: 
+                0 0 30px var(--accent-glow),
+                inset 0 0 30px var(--accent-glow);
+            animation: frameGlow 3s ease-in-out infinite;
         }
 
-        .logo-animation .middle-ring {
+        @keyframes frameGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 30px var(--accent-glow),
+                    inset 0 0 30px var(--accent-glow);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 50px var(--accent-color),
+                    inset 0 0 50px var(--accent-color);
+            }
+        }
+
+        .diamond-core-large {
             position: absolute;
             top: 15%;
             left: 15%;
             width: 70%;
             height: 70%;
-            border: 2px solid transparent;
-            border-right: 2px solid var(--accent-color);
-            border-radius: 50%;
-            animation: spinReverse 3s linear infinite;
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
-
-        .logo-animation .diamond-core {
-            position: absolute;
-            top: 30%;
-            left: 30%;
-            width: 40%;
-            height: 40%;
-            background: linear-gradient(135deg, var(--accent-color), #00a86b, #00ff88);
+            background: linear-gradient(135deg, var(--accent-color), #00a86b, #00ff88, #00a86b);
             clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-            animation: diamondGlow 3s ease-in-out infinite, diamondFloat 6s ease-in-out infinite;
+            animation: diamondRotateHorizontal 8s linear infinite;
             box-shadow: 
-                0 0 30px var(--accent-glow),
-                inset 0 0 20px rgba(255, 255, 255, 0.3);
+                0 0 50px var(--accent-glow),
+                inset 0 0 30px rgba(255, 255, 255, 0.5);
+            filter: brightness(1.2);
+            transform-style: preserve-3d;
         }
 
-        @keyframes diamondGlow {
-            0%, 100% { 
-                transform: scale(1);
-                filter: brightness(1) drop-shadow(0 0 10px var(--accent-glow));
-            }
-            50% { 
-                transform: scale(1.1);
-                filter: brightness(1.3) drop-shadow(0 0 20px var(--accent-color));
-            }
-        }
-
-        @keyframes diamondFloat {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-5px) rotate(5deg); }
-            50% { transform: translateY(0px) rotate(0deg); }
-            75% { transform: translateY(-3px) rotate(-5deg); }
+        @keyframes diamondRotateHorizontal {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
         }
 
         .logo-text {
@@ -503,13 +527,6 @@
             font-weight: 400;
             font-family: var(--font-primary);
             letter-spacing: 0.01em;
-        }
-
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-10px) rotate(5deg); }
-            50% { transform: translateY(-5px) rotate(0deg); }
-            75% { transform: translateY(-8px) rotate(-5deg); }
         }
 
         @keyframes titleGlow {
@@ -621,6 +638,14 @@
             animation: pricePulse 3s ease-in-out infinite;
             font-family: var(--font-accent);
             letter-spacing: -0.02em;
+            transition: all 0.5s ease;
+            transform-style: preserve-3d;
+            perspective: 500px;
+        }
+
+        .price:hover {
+            animation: none;
+            transform: rotateY(15deg);
         }
 
         @keyframes pricePulse {
@@ -1146,7 +1171,7 @@
     <div class="safe-area-bottom"></div>
 
     <!-- Аудио элемент -->
-    <audio class="audio-element" id="backgroundMusic" loop>
+    <audio class="audio-element" id="backgroundMusic" loop autoplay>
         <source src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3" type="audio/mpeg">
         Ваш браузер не поддерживает аудио элементы.
     </audio>
@@ -1175,20 +1200,13 @@
 
     <!-- Переключатель темы -->
     <div class="theme-toggle" id="themeToggle">
-        <div class="toggle-icon sun">☀️</div>
-        <div class="toggle-slider"></div>
-        <div class="toggle-icon moon">🌙</div>
+        <div class="theme-toggle-icon">🌙</div>
     </div>
 
     <!-- Анимированный фон -->
-    <div class="background">
+    <div class="background" id="background">
         <div class="grid-lines"></div>
-        <div class="floating-shapes">
-            <div class="shape"></div>
-            <div class="shape"></div>
-            <div class="shape"></div>
-            <div class="shape"></div>
-        </div>
+        <div class="grid-distortion" id="gridDistortion"></div>
     </div>
 
     <!-- Парящие элементы -->
@@ -1208,9 +1226,8 @@
         <div class="header">
             <div class="logo">
                 <div class="logo-animation">
-                    <div class="outer-ring"></div>
-                    <div class="middle-ring"></div>
-                    <div class="diamond-core"></div>
+                    <div class="diamond-frame"></div>
+                    <div class="diamond-core-large"></div>
                 </div>
                 <div class="logo-text">KXLLSTELLAR</div>
             </div>
@@ -1447,10 +1464,12 @@
         // Управление темой
         function initTheme() {
             const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('.theme-toggle-icon');
             
             // Загружаем тему из localStorage или устанавливаем темную по умолчанию
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.body.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(themeIcon, savedTheme);
             
             themeToggle.addEventListener('click', () => {
                 const currentTheme = document.body.getAttribute('data-theme');
@@ -1458,9 +1477,41 @@
                 
                 document.body.setAttribute('data-theme', newTheme);
                 localStorage.setItem('theme', newTheme);
+                updateThemeIcon(themeIcon, newTheme);
                 
                 showNotification(newTheme === 'dark' ? '🌙 Темная тема включена' : '☀️ Светлая тема включена');
             });
+        }
+
+        function updateThemeIcon(icon, theme) {
+            if (theme === 'dark') {
+                icon.textContent = '🌙';
+            } else {
+                icon.textContent = '☀️';
+            }
+        }
+
+        // Эффект искажения сетки при наведении мыши
+        function initGridDistortion() {
+            const gridDistortion = document.getElementById('gridDistortion');
+            const background = document.getElementById('background');
+            
+            // Проверяем, что это десктопное устройство
+            if (window.innerWidth > 768) {
+                background.addEventListener('mousemove', (e) => {
+                    const rect = background.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+                    
+                    gridDistortion.style.setProperty('--mouse-x', `${x}%`);
+                    gridDistortion.style.setProperty('--mouse-y', `${y}%`);
+                    gridDistortion.style.opacity = '1';
+                });
+                
+                background.addEventListener('mouseleave', () => {
+                    gridDistortion.style.opacity = '0';
+                });
+            }
         }
 
         // Анимированная загрузка с размытым фоном
@@ -1579,6 +1630,9 @@
             
             // Инициализация поведения скролла
             initScrollBehavior();
+            
+            // Инициализация эффекта искажения сетки
+            initGridDistortion();
             
             // Запуск анимированной загрузки
             initLoading();
