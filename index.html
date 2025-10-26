@@ -211,9 +211,9 @@
             left: max(20px, var(--safe-area-left));
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: min(45px, 10vw);
-            height: min(45px, 10vw);
+            border-radius: 50px;
+            width: min(60px, 12vw);
+            height: min(30px, 6vw);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -223,6 +223,15 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             font-size: min(18px, 4vw);
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .music-toggle.hidden {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
         }
 
         .music-toggle:hover {
@@ -252,6 +261,15 @@
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .theme-toggle.hidden {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
         }
 
         .theme-toggle:hover {
@@ -1145,6 +1163,30 @@
         let isMusicPlaying = true; // Музыка включена по умолчанию
         let audioFadeInterval;
         let isUserInteracted = false;
+        let lastScrollY = 0;
+        let isScrollingDown = false;
+
+        // Инициализация скролла для кнопок
+        function initScrollBehavior() {
+            const musicToggle = document.getElementById('musicToggle');
+            const themeToggle = document.getElementById('themeToggle');
+            
+            window.addEventListener('scroll', function() {
+                const currentScrollY = window.scrollY;
+                isScrollingDown = currentScrollY > lastScrollY;
+                lastScrollY = currentScrollY;
+                
+                if (isScrollingDown && currentScrollY > 50) {
+                    // Прячем кнопки при скролле вниз
+                    musicToggle.classList.add('hidden');
+                    themeToggle.classList.add('hidden');
+                } else {
+                    // Показываем кнопки при скролле вверх
+                    musicToggle.classList.remove('hidden');
+                    themeToggle.classList.remove('hidden');
+                }
+            });
+        }
 
         function initMusic() {
             const musicToggle = document.getElementById('musicToggle');
@@ -1394,6 +1436,9 @@
             // Инициализация музыки
             initMusic();
             
+            // Инициализация поведения скролла
+            initScrollBehavior();
+            
             // Запуск анимированной загрузки
             initLoading();
             
@@ -1420,6 +1465,66 @@
             // Предзагрузка аудио для лучшей производительности
             audio.load();
         });
+
+        // Защита от копирования и инспектирования
+        // Блокировка контекстного меню
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            showNotification('🚫 Контекстное меню отключено');
+        });
+
+        // Блокировка клавиш F12, Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+U
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                (e.ctrlKey && e.key === 'u')
+            ) {
+                e.preventDefault();
+                showNotification('🚫 Инспектирование отключено');
+            }
+        });
+
+        // Защита от копирования текста
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            showNotification('🚫 Копирование текста отключено');
+        });
+
+        // Защита от перетаскивания изображений
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
+
+        // Защита от вставки
+        document.addEventListener('paste', function(e) {
+            e.preventDefault();
+            showNotification('🚫 Вставка отключена');
+        });
+
+        // Защита от перетаскивания файлов
+        document.addEventListener('drop', function(e) {
+            e.preventDefault();
+        });
+
+        // Защита от перетаскивания на документ
+        document.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+
+        // Защита от открытия DevTools через меню браузера
+        let devToolsOpen = false;
+        setInterval(function() {
+            const threshold = 160;
+            const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+            const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+            
+            if (!devToolsOpen && (widthThreshold || heightThreshold)) {
+                devToolsOpen = true;
+                document.body.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 24px; color: var(--accent-color);">🚫 Инспектирование отключено</div>';
+            }
+        }, 1000);
     </script>
 </body>
 </html>
