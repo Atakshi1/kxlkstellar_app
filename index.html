@@ -31,7 +31,18 @@
             --dynamic-island-height: 52px;
         }
 
-        /* Загрузочный экран с размытием */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            transition: all 0.5s ease;
+            padding: 0;
+            margin: 0;
+        }
+
         .loading-screen {
             position: fixed;
             top: 0;
@@ -45,90 +56,29 @@
             align-items: center;
             z-index: 9999;
             transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 0;
-            margin: 0;
-            overflow: hidden;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
         }
 
-        /* Анимация уведомлений */
-        .notification {
+        .music-toggle {
             position: fixed;
-            top: max(60px, calc(var(--safe-area-top) + var(--dynamic-island-height)));
-            left: 50%;
-            transform: translateX(-50%);
+            top: max(30px, calc(var(--safe-area-top) + 10px));
+            left: max(20px, var(--safe-area-left));
             background: var(--card-bg);
-            color: var(--text-primary);
-            padding: min(12px, 2.5vw) min(20px, 4vw);
-            border-radius: min(12px, 2.5vw);
-            box-shadow: var(--shadow);
-            z-index: 1001;
-            border-left: 3px solid var(--accent-color);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            width: min(60px, 12vw);
+            height: min(30px, 6vw);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease, transform 0.3s ease;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            max-width: min(300px, 80vw);
-            text-align: center;
-            font-size: min(0.85rem, 3.5vw);
-            font-weight: 500;
-            opacity: 0;
-            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-            animation: notificationBlink 2s linear infinite, fadeOut 3s ease-out forwards;
         }
 
-        @keyframes notificationBlink {
-            0% { color: var(--accent-color); text-decoration: underline; }
-            50% { color: transparent; text-decoration: none; }
-            100% { color: var(--accent-color); text-decoration: underline; }
-        }
-
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        /* Управление музыкой */
-        .audio-element {
-            display: none;
-        }
-
-        /* Кнопки управления */
-        .hidden {
-            opacity: 0;
-            transform: translateY(-10px);
-            pointer-events: none;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        /* Основной контейнер */
-        .container {
-            max-width: min(1200px, 95vw);
-            margin: 0 auto;
-            padding: max(80px, var(--safe-area-top)) max(20px, var(--safe-area-left)) max(40px, var(--safe-area-bottom));
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-            filter: blur(0px);
-            transition: filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .container.blurred {
-            filter: blur(15px);
-        }
-
-        /* Панель переключения темы */
         .theme-toggle {
             position: fixed;
             top: max(30px, calc(var(--safe-area-top) + 10px));
@@ -143,45 +93,163 @@
             align-items: center;
             padding: min(5px, 1vw);
             z-index: 1000;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: opacity 0.3s ease, transform 0.3s ease;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
-        /* Защита от копирования */
-        document.addEventListener('copy', function(e) {
-            if (!e.target.classList.contains('card-info')) {
-                e.preventDefault();
-                showNotification('🚫 Копирование текста отключено');
-            }
-        });
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.4;
+        }
 
-        // Прочее, например для контекстного меню
-        document.addEventListener('contextmenu', function(e) {
-            if (!e.target.classList.contains('card-info')) {
-                e.preventDefault();
-                showNotification('🚫 Контекстное меню отключено');
-            }
-        });
+        .grid-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: min(50px, 10vw) min(50px, 10vw);
+        }
 
-        document.addEventListener('dragstart', function(e) {
-            if (!e.target.classList.contains('card-info')) {
-                e.preventDefault();
-                showNotification('🚫 Перетаскивание отключено');
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            font-size: min(2rem, 6vw);
+            opacity: 0.1;
+            animation: floatElement 30s linear infinite;
+        }
+
+        @keyframes floatElement {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(100px, 50px) rotate(90deg) scale(1.1); }
+            50% { transform: translate(50px, 100px) rotate(180deg) scale(1); }
+            75% { transform: translate(-50px, 50px) rotate(270deg) scale(1.1); }
+        }
+
+        .container {
+            max-width: min(1200px, 95vw);
+            margin: 0 auto;
+            padding: max(80px, var(--safe-area-top)) max(20px, var(--safe-area-left)) max(40px, var(--safe-area-bottom));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container.blurred {
+            filter: blur(15px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: min(60px, 8vh);
+            position: relative;
+            width: 100%;
+        }
+
+        .title {
+            font-size: min(4rem, 12vw);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-color), #00a86b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .music-toggle.hidden {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        .theme-toggle.hidden {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        @media (max-width: 430px) {
+            :root {
+                --safe-area-top: env(safe-area-inset-top, 47px);
+                --dynamic-island-height: 59px;
             }
-        });
+        }
+
+        @media (max-width: 390px) {
+            :root {
+                --safe-area-top: env(safe-area-inset-top, 44px);
+                --dynamic-island-height: 52px;
+            }
+        }
+
+        @media (max-width: 375px) {
+            :root {
+                --safe-area-top: env(safe-area-inset-top, 44px);
+                --dynamic-island-height: 52px;
+            }
+            
+            .container {
+                padding: max(60px, var(--safe-area-top)) 15px max(30px, var(--safe-area-bottom));
+            }
+        }
+
+        @media (max-width: 320px) {
+            :root {
+                --safe-area-top: env(safe-area-inset-top, 40px);
+                --dynamic-island-height: 48px;
+            }
+            
+            .container {
+                padding: max(50px, var(--safe-area-top)) 12px max(25px, var(--safe-area-bottom));
+            }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            .container {
+                padding: max(40px, var(--safe-area-top)) 20px max(20px, var(--safe-area-bottom));
+                justify-content: flex-start;
+            }
+        }
+
+        @media (min-height: 1000px) {
+            .container {
+                padding: max(100px, var(--safe-area-top)) 20px max(60px, var(--safe-area-bottom));
+            }
+        }
     </style>
 </head>
 <body data-theme="dark">
+    <!-- Safe area overlays -->
+    <div class="safe-area-top"></div>
+    <div class="safe-area-bottom"></div>
+
+    <!-- Аудио элемент -->
     <audio class="audio-element" id="backgroundMusic" loop>
         <source src="audio.mp3" type="audio/mpeg">
         <source src="audio.ogg" type="audio/ogg">
         Ваш браузер не поддерживает аудио элементы.
     </audio>
 
+    <!-- Анимированная загрузка с размытым фоном -->
     <div class="loading-screen" id="loadingScreen">
         <div class="diamond-loader">
             <div class="diamond"></div>
@@ -194,63 +262,75 @@
         </div>
     </div>
 
-    <div class="container" id="mainContainer">
-        <h1 class="title">Kxllstellar</h1>
+    <!-- Кнопка управления музыкой -->
+    <div class="music-toggle" id="musicToggle" title="Включить/выключить музыку">
+        🎵
     </div>
 
-    <div class="notification" id="notification"></div>
+    <!-- Переключатель темы -->
+    <div class="theme-toggle" id="themeToggle">
+        <div class="toggle-icon sun">☀️</div>
+        <div class="toggle-slider"></div>
+        <div class="toggle-icon moon">🌙</div>
+    </div>
+
+    <!-- Анимированный фон -->
+    <div class="background">
+        <div class="grid-lines"></div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container" id="mainContainer">
+        <div class="header">
+            <h1 class="title">Kxllstellar</h1>
+        </div>
+    </div>
 
     <script>
-        let isMusicPlaying = true;
+        // Управление музыкой
+        let isMusicPlaying = false;
         const audio = document.getElementById('backgroundMusic');
+        const musicToggle = document.getElementById('musicToggle');
         
-        // Музыка автоматически включается при загрузке
-        window.addEventListener('load', () => {
-            audio.play().catch((e) => {
-                console.log("Автозапуск не разрешен, музыка будет включена вручную.");
-            });
-        });
-
-        // Показ уведомлений
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        // Анимация для кнопок при прокрутке
-        let lastScrollY = window.scrollY;
-        let isScrollingDown = false;
-
-        window.addEventListener('scroll', function() {
-            const musicToggle = document.getElementById('musicToggle');
-            const themeToggle = document.getElementById('themeToggle');
-
-            let currentScrollY = window.scrollY;
-            isScrollingDown = currentScrollY > lastScrollY;
-            lastScrollY = currentScrollY;
-
-            if (isScrollingDown) {
-                musicToggle.classList.add('hidden');
-                themeToggle.classList.add('hidden');
+        musicToggle.addEventListener('click', function() {
+            if (isMusicPlaying) {
+                audio.pause();
+                isMusicPlaying = false;
+                musicToggle.classList.add('muted');
             } else {
-                musicToggle.classList.remove('hidden');
-                themeToggle.classList.remove('hidden');
+                audio.play();
+                isMusicPlaying = true;
+                musicToggle.classList.remove('muted');
             }
         });
 
-        // Загрузка контента
+        // Анимация кнопок при скролле
+        let lastScrollY = 0;
+        const musicButton = document.getElementById('musicToggle');
+        const themeButton = document.getElementById('themeToggle');
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            if (currentScrollY > lastScrollY) {
+                musicButton.classList.add('hidden');
+                themeButton.classList.add('hidden');
+            } else {
+                musicButton.classList.remove('hidden');
+                themeButton.classList.remove('hidden');
+            }
+            lastScrollY = currentScrollY;
+        });
+
+        // Инициализация загрузки
         function initLoading() {
             const loadingScreen = document.getElementById('loadingScreen');
             const mainContainer = document.getElementById('mainContainer');
+            
             mainContainer.classList.add('blurred');
+            
             setTimeout(() => {
                 mainContainer.classList.remove('blurred');
                 loadingScreen.style.opacity = '0';
-                loadingScreen.style.backdropFilter = 'blur(0px)';
                 setTimeout(() => {
                     loadingScreen.style.display = 'none';
                 }, 1200);
