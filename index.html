@@ -814,43 +814,44 @@
         /* Уведомления с эффектом затухания */
         .notification {
             position: fixed;
-            top: max(60px, calc(var(--safe-area-top) + var(--dynamic-island-height)));
-            left: 50%;
-            transform: translateX(-50%);
+            top: max(20px, calc(var(--safe-area-top) + 10px));
+            left: max(20px, var(--safe-area-left));
             background: var(--card-bg);
             color: var(--text-primary);
-            padding: min(12px, 2.5vw) min(20px, 4vw);
-            border-radius: min(12px, 2.5vw);
+            padding: min(8px, 2vw) min(12px, 3vw);
+            border-radius: min(8px, 2vw);
             box-shadow: var(--shadow);
             z-index: 1001;
             border-left: 3px solid var(--accent-color);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            max-width: min(300px, 80vw);
-            text-align: center;
-            font-size: min(0.85rem, 3.5vw);
+            max-width: min(250px, 70vw);
+            text-align: left;
+            font-size: min(0.75rem, 3vw);
             font-weight: 500;
             opacity: 0;
-            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
         }
 
         .notification.show {
             opacity: 1;
+            transform: translateX(0);
             animation: notificationGlow 2s ease-in-out;
         }
 
         @keyframes notificationGlow {
             0%, 100% { 
-                box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+                box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
                 border-left-color: var(--accent-color);
             }
             25%, 75% { 
-                box-shadow: 0 0 30px rgba(0, 255, 136, 0.7);
+                box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
                 border-left-color: #00ff88;
             }
             50% { 
-                box-shadow: 0 0 40px rgba(0, 255, 136, 0.9);
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.9);
                 border-left-color: #00ffaa;
             }
         }
@@ -915,6 +916,11 @@
             .container {
                 padding: max(60px, var(--safe-area-top)) 15px max(30px, var(--safe-area-bottom));
             }
+            
+            .notification {
+                font-size: min(0.7rem, 2.8vw);
+                padding: min(6px, 1.5vw) min(10px, 2.5vw);
+            }
         }
 
         @media (max-width: 320px) {
@@ -929,6 +935,12 @@
             
             .card {
                 padding: 20px 15px;
+            }
+            
+            .notification {
+                font-size: min(0.65rem, 2.5vw);
+                padding: min(5px, 1.2vw) min(8px, 2vw);
+                max-width: min(200px, 65vw);
             }
         }
 
@@ -953,10 +965,6 @@
             
             .card {
                 padding: 20px;
-            }
-            
-            .notification {
-                top: max(50px, calc(var(--safe-area-top) + 30px));
             }
         }
 
@@ -983,8 +991,8 @@
 
     <!-- Аудио элемент -->
     <audio class="audio-element" id="backgroundMusic" loop>
-        <source src="audio.mp3" type="audio/mpeg">
-        <source src="audio.ogg" type="audio/ogg">
+        <source src="/audio.mp3" type="audio/mpeg">
+        <source src="/audio.ogg" type="audio/ogg">
         Ваш браузер не поддерживает аудио элементы.
     </audio>
 
@@ -1132,11 +1140,11 @@
         };
 
         // Управление музыкой
-        let isMusicPlaying = true;
+        let isMusicPlaying = false;
         let audioFadeInterval;
-        let isUserInteracted = false;
         let lastScrollY = 0;
         let isScrollingDown = false;
+        let scrollTimeout;
 
         // Инициализация скролла для кнопок
         function initScrollBehavior() {
@@ -1144,69 +1152,94 @@
             
             window.addEventListener('scroll', function() {
                 const currentScrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                
                 isScrollingDown = currentScrollY > lastScrollY;
                 lastScrollY = currentScrollY;
                 
-                if (isScrollingDown && currentScrollY > 50) {
+                // Показываем кнопку когда доскроллили до конца
+                const isAtBottom = currentScrollY + windowHeight >= documentHeight - 100;
+                
+                if (isScrollingDown && currentScrollY > 50 && !isAtBottom) {
                     // Прячем кнопки при скролле вниз
                     themeToggle.classList.add('hidden');
                 } else {
-                    // Показываем кнопки при скролле вверх
+                    // Показываем кнопки при скролле вверх или в конце страницы
                     themeToggle.classList.remove('hidden');
                 }
             });
         }
 
+        // Новая функция управления музыкой
         function initMusic() {
             const audio = document.getElementById('backgroundMusic');
             
             // Автоматическое включение музыки после загрузки
             setTimeout(() => {
-                if (!isUserInteracted) {
-                    playMusic();
-                }
+                playMusic();
             }, 1000);
 
-            // Обработчик клика для первого взаимодействия
-            document.addEventListener('click', function initAudio() {
-                if (!isUserInteracted) {
-                    isUserInteracted = true;
-                    if (!isMusicPlaying) {
+            // Обработчик изменения видимости вкладки
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    // Останавливаем музыку когда вкладка не активна
+                    pauseMusic();
+                } else {
+                    // Возобновляем музыку когда вкладка активна
+                    if (isMusicPlaying) {
                         playMusic();
                     }
                 }
-            }, { once: true });
-
-            // Отключаем автоматическую паузу при скрытии вкладки
-            document.addEventListener('visibilitychange', function() {
-                console.log('Visibility changed, but music continues playing');
             });
 
+            // Обработчик для Safari и мобильных браузеров
             window.addEventListener('pagehide', function() {
-                console.log('Page hide, music state preserved');
+                pauseMusic();
             });
 
             window.addEventListener('pageshow', function() {
-                console.log('Page show, music state:', isMusicPlaying);
+                if (isMusicPlaying) {
+                    playMusic();
+                }
             });
         }
 
         function playMusic() {
             const audio = document.getElementById('backgroundMusic');
             
-            // Устанавливаем низкую громкость для плавного включения
-            audio.volume = 0.3;
+            if (audio.paused) {
+                // Устанавливаем низкую громкость для плавного включения
+                audio.volume = 0.3;
+                
+                // Пытаемся воспроизвести с обработкой ошибок
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        isMusicPlaying = true;
+                        console.log('Music started playing');
+                        
+                        // Плавное увеличение громкости
+                        fadeInMusic();
+                    }).catch(error => {
+                        console.log('Autoplay prevented:', error);
+                        isMusicPlaying = false;
+                    });
+                }
+            }
+        }
+
+        function pauseMusic() {
+            const audio = document.getElementById('backgroundMusic');
             
-            // Пытаемся воспроизвести с обработкой ошибок
-            const playPromise = audio.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    isMusicPlaying = true;
-                    console.log('Music started playing');
-                }).catch(error => {
-                    console.log('Autoplay prevented:', error);
-                });
+            if (!audio.paused) {
+                // Плавное уменьшение громкости перед паузой
+                fadeOutMusic();
+                setTimeout(() => {
+                    audio.pause();
+                    isMusicPlaying = false;
+                }, 600);
             }
         }
 
@@ -1217,8 +1250,8 @@
             let volume = audio.volume;
             audioFadeInterval = setInterval(() => {
                 volume += 0.05;
-                if (volume >= 0.5) {
-                    volume = 0.5;
+                if (volume >= 0.7) {
+                    volume = 0.7;
                     clearInterval(audioFadeInterval);
                 }
                 audio.volume = volume;
