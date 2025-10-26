@@ -22,7 +22,7 @@
             user-select: none;
         }
 
-        .card-number, .copy-btn, .project-description {
+        .project-description, .project-btn {
             -webkit-user-select: text;
             -moz-user-select: text;
             -ms-user-select: text;
@@ -563,29 +563,30 @@
 
         /* ТАБЛИЦА ПРОЕКТОВ */
         .projects-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(350px, 90vw), 1fr));
+            display: flex;
+            flex-direction: column;
             gap: min(30px, 4vh);
             width: 100%;
-            max-width: min(1100px, 95vw);
+            max-width: min(800px, 95vw);
         }
 
-        .project-card {
+        .main-project-card {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-color);
             border-radius: min(25px, 5vw);
-            padding: min(30px, 5vw);
+            padding: min(40px, 6vw);
             box-shadow: var(--shadow);
             transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
             animation: cardFloat 8s ease-in-out infinite;
             cursor: pointer;
+            text-align: center;
         }
 
-        .project-card::before {
+        .main-project-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -596,20 +597,15 @@
             transition: left 0.8s ease;
         }
 
-        .project-card:hover::before {
+        .main-project-card:hover::before {
             left: 100%;
         }
 
-        .project-card:hover {
+        .main-project-card:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 25px 60px var(--accent-glow);
             border-color: var(--accent-color);
             animation-play-state: paused;
-        }
-
-        .project-card.expanded {
-            max-height: 1000px;
-            transition: max-height 0.8s ease;
         }
 
         @keyframes cardFloat {
@@ -617,70 +613,175 @@
             50% { transform: translateY(-5px); }
         }
 
-        .project-header {
+        .project-icon-small {
+            position: relative;
+            width: min(60px, 12vw);
+            height: min(60px, 12vw);
+            margin: 0 auto min(20px, 3vh);
+        }
+
+        .diamond-frame-small {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--accent-color);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            box-shadow: 
+                0 0 15px var(--accent-glow),
+                inset 0 0 15px var(--accent-glow);
+            animation: frameGlowSmall 3s ease-in-out infinite;
+        }
+
+        @keyframes frameGlowSmall {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 15px var(--accent-glow),
+                    inset 0 0 15px var(--accent-glow);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 25px var(--accent-color),
+                    inset 0 0 25px var(--accent-color);
+            }
+        }
+
+        .diamond-core-small {
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 70%;
+            height: 70%;
+            background: linear-gradient(135deg, var(--accent-color), #00a86b, #00ff88, #00a86b);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            animation: diamondRotateHorizontalSmall 6s linear infinite;
+            box-shadow: 
+                0 0 25px var(--accent-glow),
+                inset 0 0 15px rgba(255, 255, 255, 0.5);
+            filter: brightness(1.2);
+            transform-style: preserve-3d;
+        }
+
+        @keyframes diamondRotateHorizontalSmall {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .project-title-main {
+            font-size: min(2rem, 6vw);
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: var(--font-heading);
+            letter-spacing: -0.01em;
+            margin-bottom: min(10px, 2vh);
+        }
+
+        .project-subtitle {
+            font-size: min(1.2rem, 4vw);
+            color: var(--text-secondary);
+            font-family: var(--font-primary);
+            margin-bottom: min(20px, 3vh);
+        }
+
+        /* ДЕТАЛЬНАЯ КАРТОЧКА ПРОЕКТА */
+        .project-detail-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--accent-color);
+            border-radius: min(25px, 5vw);
+            padding: min(40px, 6vw);
+            box-shadow: 0 25px 60px var(--accent-glow);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(20px);
+            margin-top: 0;
+        }
+
+        .project-detail-card.expanded {
+            max-height: 2000px;
+            opacity: 1;
+            transform: translateY(0);
+            margin-top: min(30px, 4vh);
+        }
+
+        .project-detail-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+            transition: left 1.2s ease;
+        }
+
+        .project-detail-card.expanded::before {
+            left: 100%;
+        }
+
+        .project-detail-header {
             display: flex;
             align-items: center;
-            margin-bottom: min(20px, 3vh);
+            margin-bottom: min(30px, 4vh);
             position: relative;
-            gap: min(15px, 3vw);
+            gap: min(20px, 4vw);
         }
 
-        .project-icon {
-            font-size: min(2.5rem, 6vw);
-            animation: iconFloat 4s ease-in-out infinite;
+        .project-detail-icon {
+            position: relative;
+            width: min(80px, 16vw);
+            height: min(80px, 16vw);
+            flex-shrink: 0;
         }
 
-        .project-title {
-            font-size: min(1.5rem, 5vw);
+        .project-detail-title {
+            font-size: min(2.2rem, 7vw);
             font-weight: 700;
             color: var(--text-primary);
             font-family: var(--font-heading);
             letter-spacing: -0.01em;
         }
 
-        .project-description {
-            color: var(--text-secondary);
-            font-size: min(1rem, 4vw);
-            line-height: 1.6;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.5s ease;
-            opacity: 0;
+        .project-detail-subtitle {
+            font-size: min(1.4rem, 5vw);
+            color: var(--accent-color);
+            font-family: var(--font-accent);
+            margin-top: min(5px, 1vh);
         }
 
-        .project-card.expanded .project-description {
-            max-height: 1000px;
-            opacity: 1;
-            margin-top: min(20px, 3vh);
+        .project-description {
+            color: var(--text-secondary);
+            font-size: min(1.1rem, 4vw);
+            line-height: 1.7;
+            margin-bottom: min(30px, 4vh);
+            text-align: left;
         }
 
         .project-features {
             list-style: none;
-            margin: min(15px, 3vh) 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.5s ease;
-            opacity: 0;
-        }
-
-        .project-card.expanded .project-features {
-            max-height: 1000px;
-            opacity: 1;
+            margin: min(25px, 4vh) 0;
         }
 
         .feature {
-            padding: min(10px, 2vh) 0;
+            padding: min(15px, 3vh) 0;
             border-bottom: 1px solid var(--border-color);
             color: var(--text-secondary);
             display: flex;
-            align-items: center;
-            gap: min(10px, 2vw);
+            align-items: flex-start;
+            gap: min(15px, 3vw);
             transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
-            font-size: min(0.9rem, 3.5vw);
+            font-size: min(1rem, 4vw);
             font-family: var(--font-primary);
             font-weight: 400;
+        }
+
+        .feature:last-child {
+            border-bottom: none;
         }
 
         .feature::before {
@@ -704,48 +805,73 @@
         }
 
         .feature-icon {
-            font-size: min(1rem, 3.5vw);
-            animation: iconFloat 4s ease-in-out infinite;
+            position: relative;
+            width: min(24px, 5vw);
+            height: min(24px, 5vw);
             flex-shrink: 0;
+            margin-top: min(2px, 0.5vh);
         }
 
-        @keyframes iconFloat {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            25% { transform: scale(1.1) rotate(5deg); }
-            50% { transform: scale(1.05) rotate(0deg); }
-            75% { transform: scale(1.1) rotate(-5deg); }
+        .diamond-feature {
+            width: 100%;
+            height: 100%;
+            background: var(--accent-color);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            animation: diamondPulse 3s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        @keyframes diamondPulse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% { 
+                transform: scale(1.1);
+                opacity: 1;
+            }
         }
 
         .project-btn {
             background: linear-gradient(135deg, var(--accent-color), #00a86b);
             color: white;
             border: none;
-            padding: min(12px, 3vh) min(20px, 4vw);
-            border-radius: min(10px, 2vw);
+            padding: min(18px, 4vh) min(30px, 6vw);
+            border-radius: min(12px, 3vw);
             cursor: pointer;
-            margin-top: min(15px, 3vh);
+            margin-top: min(25px, 4vh);
             transition: all 0.4s ease;
             font-weight: 600;
-            font-size: min(0.9rem, 3.5vw);
+            font-size: min(1.1rem, 4vw);
             width: 100%;
             font-family: var(--font-accent);
             letter-spacing: 0.02em;
             text-decoration: none;
             display: inline-block;
             text-align: center;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.5s ease;
+            box-shadow: 0 10px 30px var(--accent-glow);
+            position: relative;
+            overflow: hidden;
         }
 
-        .project-card.expanded .project-btn {
-            opacity: 1;
-            transform: translateY(0);
+        .project-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .project-btn:hover::before {
+            left: 100%;
         }
 
         .project-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px var(--accent-glow);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px var(--accent-glow);
         }
 
         .notification {
@@ -842,12 +968,17 @@
             }
             
             .projects-container {
-                grid-template-columns: 1fr;
                 gap: min(20px, 3vh);
             }
             
-            .project-card {
+            .main-project-card, .project-detail-card {
                 padding: min(25px, 5vw);
+            }
+            
+            .project-detail-header {
+                flex-direction: column;
+                text-align: center;
+                gap: min(15px, 3vh);
             }
         }
 
@@ -866,14 +997,8 @@
                 padding: 0 10px;
             }
             
-            .project-card {
+            .main-project-card, .project-detail-card {
                 padding: min(20px, 4vw);
-            }
-            
-            .project-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: min(10px, 2vh);
             }
             
             .feature {
@@ -901,7 +1026,7 @@
                 padding: 5px 10px;
             }
             
-            .project-card {
+            .main-project-card, .project-detail-card {
                 padding: 15px 10px;
             }
             
@@ -930,7 +1055,7 @@
                 gap: 15px;
             }
             
-            .project-card {
+            .main-project-card, .project-detail-card {
                 padding: 20px;
             }
         }
@@ -1020,88 +1145,69 @@
         </div>
 
         <div class="projects-container">
-            <div class="project-card" id="sufistBotCard">
-                <div class="project-header">
-                    <div class="project-icon">🤖</div>
-                    <h2 class="project-title">Суфист Бот</h2>
+            <div class="main-project-card" id="mainProjectCard">
+                <div class="project-icon-small">
+                    <div class="diamond-frame-small"></div>
+                    <div class="diamond-core-small"></div>
                 </div>
+                <h2 class="project-title-main">Наши проекты</h2>
+                <p class="project-subtitle">Нажмите чтобы увидеть наш главный проект</p>
+            </div>
+
+            <div class="project-detail-card" id="projectDetailCard">
+                <div class="project-detail-header">
+                    <div class="project-detail-icon">
+                        <div class="diamond-frame-small"></div>
+                        <div class="diamond-core-small"></div>
+                    </div>
+                    <div>
+                        <h2 class="project-detail-title">Суфист Бот</h2>
+                        <p class="project-detail-subtitle">Страничный бот для ВКонтакте</p>
+                    </div>
+                </div>
+                
                 <p class="project-description">
                     Многофункциональный страничный бот для чатов ВКонтакте с расширенными возможностями модерации и развлечения. 
-                    Бот помогает управлять беседами, предоставляет полезные команды и создает веселую атмосферу в чате.
+                    Бот помогает управлять беседами, предоставляет полезные команды и создает веселую атмосферу в чате. 
+                    Разработан с использованием современных технологий для обеспечения стабильной работы 24/7.
                 </p>
+                
                 <ul class="project-features">
                     <li class="feature">
-                        <span class="feature-icon">🛡️</span>
-                        <span>Система модерации с автоматическим удалением нарушений</span>
+                        <div class="feature-icon">
+                            <div class="diamond-feature"></div>
+                        </div>
+                        <span>Система модерации с автоматическим удалением нарушений и анти-спам фильтрами</span>
                     </li>
                     <li class="feature">
-                        <span class="feature-icon">🎮</span>
-                        <span>Мини-игры для развлечения участников беседы</span>
+                        <div class="feature-icon">
+                            <div class="diamond-feature"></div>
+                        </div>
+                        <span>Мини-игры для развлечения участников беседы с системой рейтингов</span>
                     </li>
                     <li class="feature">
-                        <span class="feature-icon">📊</span>
-                        <span>Статистика активности участников и сообщества</span>
+                        <div class="feature-icon">
+                            <div class="diamond-feature"></div>
+                        </div>
+                        <span>Детальная статистика активности участников и сообщества</span>
                     </li>
                     <li class="feature">
-                        <span class="feature-icon">🔧</span>
-                        <span>Гибкие настройки и кастомизация команд</span>
+                        <div class="feature-icon">
+                            <div class="diamond-feature"></div>
+                        </div>
+                        <span>Гибкие настройки и кастомизация команд под ваши нужды</span>
                     </li>
                     <li class="feature">
-                        <span class="feature-icon">⚡</span>
-                        <span>Быстрое реагирование и стабильная работа 24/7</span>
+                        <div class="feature-icon">
+                            <div class="diamond-feature"></div>
+                        </div>
+                        <span>Быстрое реагирование и стабильная работа 24/7 без простоев</span>
                     </li>
                 </ul>
+                
                 <a href="https://vk.com/id22204798" class="project-btn" target="_blank">
                     Перейти к боту ВКонтакте
                 </a>
-            </div>
-
-            <div class="project-card">
-                <div class="project-header">
-                    <div class="project-icon">💎</div>
-                    <h2 class="project-title">Kxllstellar Utils</h2>
-                </div>
-                <p class="project-description">
-                    Набор утилит и инструментов для разработчиков ВКонтакте. 
-                    Упрощает работу с API, предоставляет готовые решения для常见 задач.
-                </p>
-                <ul class="project-features">
-                    <li class="feature">
-                        <span class="feature-icon">🔌</span>
-                        <span>Упрощенное взаимодействие с VK API</span>
-                    </li>
-                    <li class="feature">
-                        <span class="feature-icon">📦</span>
-                        <span>Готовые модули для быстрой разработки</span>
-                    </li>
-                </ul>
-                <button class="project-btn">
-                    Скоро будет доступно
-                </button>
-            </div>
-
-            <div class="project-card">
-                <div class="project-header">
-                    <div class="project-icon">🚀</div>
-                    <h2 class="project-title">VK Community Manager</h2>
-                </div>
-                <p class="project-description">
-                    Инструмент для управления сообществами ВКонтакте с расширенной аналитикой 
-                    и автоматизацией рутинных задач.
-                </p>
-                <ul class="project-features">
-                    <li class="feature">
-                        <span class="feature-icon">📈</span>
-                        <span>Детальная аналитика активности сообщества</span>
-                    </li>
-                    <li class="feature">
-                        <span class="feature-icon">🤖</span>
-                        <span>Автоматизация публикаций и модерации</span>
-                    </li>
-                </ul>
-                <button class="project-btn">
-                    В разработке
-                </button>
             </div>
         </div>
     </div>
@@ -1313,25 +1419,21 @@
 
         // Управление проектами
         function initProjects() {
-            const projectCards = document.querySelectorAll('.project-card');
+            const mainProjectCard = document.getElementById('mainProjectCard');
+            const projectDetailCard = document.getElementById('projectDetailCard');
             
-            projectCards.forEach(card => {
-                card.addEventListener('click', function(e) {
-                    // Игнорируем клики по кнопкам
-                    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
-                        return;
-                    }
-                    
-                    // Закрываем другие открытые карточки
-                    projectCards.forEach(otherCard => {
-                        if (otherCard !== this && otherCard.classList.contains('expanded')) {
-                            otherCard.classList.remove('expanded');
-                        }
-                    });
-                    
-                    // Переключаем текущую карточку
-                    this.classList.toggle('expanded');
-                });
+            mainProjectCard.addEventListener('click', function() {
+                // Переключаем детальную карточку
+                projectDetailCard.classList.toggle('expanded');
+                
+                // Анимируем основную карточку
+                if (projectDetailCard.classList.contains('expanded')) {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                    this.style.boxShadow = '0 25px 60px var(--accent-glow)';
+                } else {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                }
             });
         }
 
@@ -1412,16 +1514,6 @@
             
             // Запуск анимированной загрузки
             initLoading();
-            
-            // Добавляем стили для анимаций
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes fadeInUp {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-            `;
-            document.head.appendChild(style);
         });
 
         // Совместимость с Safari и другими браузерами
@@ -1453,7 +1545,7 @@
 
         // Защита от копирования текста (только для реквизитов)
         document.addEventListener('copy', function(e) {
-            // Разрешаем копирование только из элементов с классом card-number или copy-btn
+            // Разрешаем копирование только из элементов с классом project-description или project-btn
             if (!e.target.classList.contains('project-description') && !e.target.classList.contains('project-btn')) {
                 e.preventDefault();
                 showNotification('🚫 Копирование текста отключено');
