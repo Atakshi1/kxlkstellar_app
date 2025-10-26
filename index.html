@@ -60,16 +60,16 @@
         }
 
         [data-theme="light"] {
-            --bg-primary: #808080;
-            --bg-secondary: #6a6a6a;
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #e0e0e0;
             --accent-color: #0066cc;
             --accent-glow: rgba(0, 102, 204, 0.4);
             --text-primary: #1a1a1a;
-            --text-secondary: #2a2a2a;
+            --text-secondary: #4a4a4a;
             --card-bg: rgba(255, 255, 255, 0.95);
-            --shadow: 0 8px 40px rgba(0, 102, 204, 0.3);
+            --shadow: 0 8px 40px rgba(0, 102, 204, 0.2);
             --border-color: rgba(0, 102, 204, 0.3);
-            --grid-color: rgba(0, 102, 204, 0.15);
+            --grid-color: rgba(0, 102, 204, 0.1);
         }
 
         body {
@@ -135,7 +135,7 @@
         }
 
         [data-theme="light"] .loading-screen {
-            background: rgba(128, 128, 128, 0.98);
+            background: rgba(245, 245, 245, 0.98);
         }
 
         .enhanced-loader {
@@ -573,27 +573,28 @@
             100% { transform: rotateY(360deg); }
         }
 
+        /* ИСПРАВЛЕННЫЙ ТЕКСТ ДЛЯ СВЕТЛОЙ ТЕМЫ */
         .logo-text {
-    font-size: min(3.5rem, 12vw);
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--accent-color), #00a86b, #00ff88);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    background-size: 200% 200%;
-    animation: titleGlow 4s ease-in-out infinite alternate, gradientShift 5s ease-in-out infinite;
-    line-height: 1.2;
-    text-align: center;
-    font-family: var(--font-heading);
-    letter-spacing: -0.03em;
-    text-transform: uppercase;
-    margin-bottom: 0;
-    position: relative;
-    transition: all 0.5s ease;
-    cursor: pointer;
-    padding: 10px 20px;
-    border-radius: 10px;
-}
+            font-size: min(3.5rem, 12vw);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-color), #00a86b, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: titleGlow 4s ease-in-out infinite alternate, gradientShift 5s ease-in-out infinite;
+            line-height: 1.2;
+            text-align: center;
+            font-family: var(--font-heading);
+            letter-spacing: -0.03em;
+            text-transform: uppercase;
+            margin-bottom: 0;
+            position: relative;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
 
         [data-theme="light"] .logo-text {
             background: linear-gradient(135deg, #0066cc, #0088ff, #00aaff, #0066cc);
@@ -619,58 +620,31 @@
             border-radius: 2px;
             opacity: 0.8;
         }
-        
-        @keyframes titleGlowLight {
-            0% { 
-                filter: drop-shadow(0 0 5px rgba(0, 102, 204, 0.3)); 
-                background-position: 0% 50%;
-            }
-            50% { 
-                filter: drop-shadow(0 0 15px rgba(0, 102, 204, 0.6)); 
-                background-position: 100% 50%;
-            }
-            100% { 
-                filter: drop-shadow(0 0 5px rgba(0, 102, 204, 0.3)); 
-                background-position: 0% 50%;
-            }
+
+        .logo-text:hover {
+            animation: titleGlow 2s ease-in-out infinite alternate, gradientShift 2s ease-in-out infinite, textShine 1.5s ease-in-out;
+            transform: scale(1.05);
         }
-        
-        @keyframes textShineLight {
-            0%, 100% { 
-                text-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
-            }
-            25% { 
-                text-shadow: 0 0 10px rgba(0, 102, 204, 0.5), 0 0 15px rgba(0, 102, 204, 0.3);
-            }
-            50% { 
-                text-shadow: 0 0 15px rgba(0, 102, 204, 0.7), 0 0 20px rgba(0, 102, 204, 0.4);
-            }
-            75% { 
-                text-shadow: 0 0 10px rgba(0, 102, 204, 0.5), 0 0 15px rgba(0, 102, 204, 0.3);
-            }
+
+        [data-theme="light"] .logo-text:hover {
+            animation: titleGlowLight 2s ease-in-out infinite alternate, gradientShift 2s ease-in-out infinite, textShineLight 1.5s ease-in-out infinite;
+            transform: scale(1.05);
         }
-        
-        @keyframes shineUnderline {
-            0% {
-                background-position: -200% 0;
-                opacity: 0.6;
-            }
-            50% {
-                background-position: 200% 0;
-                opacity: 1;
-            }
-            100% {
-                background-position: -200% 0;
-                opacity: 0.6;
-            }
+
+        .subtitle {
+            font-size: min(1.2rem, 4.5vw);
+            color: var(--text-secondary);
+            max-width: min(600px, 90vw);
+            margin: 0 auto;
+            line-height: 1.6;
+            animation: subtitleFloat 5s ease-in-out infinite;
+            text-align: center;
+            padding: 0 min(20px, 5vw);
+            font-weight: 500;
+            font-family: var(--font-primary);
+            letter-spacing: 0.01em;
         }
-        
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
+
         @keyframes titleGlow {
             0% { 
                 filter: drop-shadow(0 0 10px var(--accent-glow)); 
@@ -686,16 +660,61 @@
             }
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes titleGlowLight {
+            0% { 
+                filter: drop-shadow(0 0 5px rgba(0, 102, 204, 0.3)); 
+                background-position: 0% 50%;
+            }
+            50% { 
+                filter: drop-shadow(0 0 15px rgba(0, 102, 204, 0.6)); 
+                background-position: 100% 50%;
+            }
+            100% { 
+                filter: drop-shadow(0 0 5px rgba(0, 102, 204, 0.3)); 
+                background-position: 0% 50%;
+            }
         }
 
         @keyframes textShine {
             0% { text-shadow: 0 0 5px var(--accent-color); }
             50% { text-shadow: 0 0 20px var(--accent-color), 0 0 30px var(--accent-color); }
             100% { text-shadow: 0 0 5px var(--accent-color); }
+        }
+
+        @keyframes textShineLight {
+            0%, 100% { 
+                text-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+            }
+            25% { 
+                text-shadow: 0 0 10px rgba(0, 102, 204, 0.5), 0 0 15px rgba(0, 102, 204, 0.3);
+            }
+            50% { 
+                text-shadow: 0 0 15px rgba(0, 102, 204, 0.7), 0 0 20px rgba(0, 102, 204, 0.4);
+            }
+            75% { 
+                text-shadow: 0 0 10px rgba(0, 102, 204, 0.5), 0 0 15px rgba(0, 102, 204, 0.3);
+            }
+        }
+
+        @keyframes shineUnderline {
+            0% {
+                background-position: -200% 0;
+                opacity: 0.6;
+            }
+            50% {
+                background-position: 200% 0;
+                opacity: 1;
+            }
+            100% {
+                background-position: -200% 0;
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         @keyframes subtitleFloat {
@@ -1248,7 +1267,7 @@
         }
     </style>
 </head>
-<body data-theme="light">
+<body data-theme="dark">
     <!-- Safe area overlays -->
     <div class="safe-area-top"></div>
     <div class="safe-area-bottom"></div>
