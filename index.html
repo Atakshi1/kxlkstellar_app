@@ -193,6 +193,41 @@
             100% { width: 100%; }
         }
 
+            .notification {
+                position: fixed;
+                top: max(60px, calc(var(--safe-area-top) + var(--dynamic-island-height)));
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--card-bg);
+                color: var(--text-primary);
+                padding: min(12px, 2.5vw) min(20px, 4vw);
+                border-radius: min(12px, 2.5vw);
+                box-shadow: var(--shadow);
+                z-index: 1001;
+                border-left: 3px solid var(--accent-color);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                max-width: min(300px, 80vw);
+                text-align: center;
+                font-size: min(0.85rem, 3.5vw);
+                font-weight: 500;
+                opacity: 0;
+                transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+                pointer-events: none;
+                animation: notificationBlink 2s linear infinite, fadeOut 3s ease-out forwards;
+            }
+            
+            @keyframes notificationBlink {
+                0% { color: var(--accent-color); text-decoration: underline; }
+                50% { color: transparent; text-decoration: none; }
+                100% { color: var(--accent-color); text-decoration: underline; }
+            }
+            
+            @keyframes fadeOut {
+                0% { opacity: 1; }
+                100% { opacity: 0; }
+            }
+
         /* Кнопка управления музыкой */
         .music-toggle {
             position: fixed;
@@ -253,6 +288,22 @@
             -webkit-backdrop-filter: blur(20px);
             opacity: 1;
             transform: translateY(0);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Класс для скрытых кнопок */
+        .hidden {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        /* Класс для появления кнопок */
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
@@ -1014,11 +1065,6 @@
         </div>
     </div>
 
-    <!-- Кнопка управления музыкой -->
-    <div class="music-toggle" id="musicToggle" title="Включить/выключить музыку">
-        🎵
-    </div>
-
     <!-- Переключатель темы -->
     <div class="theme-toggle" id="themeToggle">
         <div class="toggle-icon sun">☀️</div>
@@ -1160,27 +1206,28 @@
                 });
             });
 
+        let lastScrollY = window.scrollY;
+        let isScrollingDown = false;
+
         // Инициализация скролла для кнопок
-        function initScrollBehavior() {
+        window.addEventListener('scroll', function() {
             const musicToggle = document.getElementById('musicToggle');
             const themeToggle = document.getElementById('themeToggle');
             
-            window.addEventListener('scroll', function() {
-                const currentScrollY = window.scrollY;
-                isScrollingDown = currentScrollY > lastScrollY;
-                lastScrollY = currentScrollY;
-                
-                if (isScrollingDown && currentScrollY > 50) {
-                    // Прячем кнопки при скролле вниз
-                    musicToggle.classList.add('hidden');
-                    themeToggle.classList.add('hidden');
-                } else {
-                    // Показываем кнопки при скролле вверх
-                    musicToggle.classList.remove('hidden');
-                    themeToggle.classList.remove('hidden');
-                }
-            });
-        }
+            let currentScrollY = window.scrollY;
+            isScrollingDown = currentScrollY > lastScrollY;
+            lastScrollY = currentScrollY;
+        
+            if (isScrollingDown) {
+                // Скрыть кнопки при прокрутке вниз
+                musicToggle.classList.add('hidden');
+                themeToggle.classList.add('hidden');
+            } else {
+                // Показать кнопки при прокрутке вверх
+                musicToggle.classList.remove('hidden');
+                themeToggle.classList.remove('hidden');
+            }
+        });
 
         function initMusic() {
             const musicToggle = document.getElementById('musicToggle');
@@ -1455,12 +1502,12 @@
             if (event.scale !== 1) { event.preventDefault(); }
         }, { passive: false });
 
-        // Совместимость с Safari и другими браузерами
-        // Убедимся, что аудио работает в разных браузерах
         window.addEventListener('load', function() {
             const audio = document.getElementById('backgroundMusic');
-            // Предзагрузка аудио для лучшей производительности
-            audio.load();
+            // Пытаемся воспроизвести музыку при загрузке страницы
+            audio.play().catch((e) => {
+                console.log("Автозапуск не разрешен, музыка будет включена вручную.");
+            });
         });
 
         // Защита от копирования и инспектирования
