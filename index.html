@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#00ff88">
-    <title>Kxllstellar | Премиум возможности</title>
+    <title>Kxllstellar | Проекты</title>
     <!-- Новые шрифты -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
             user-select: none;
         }
 
-        .card-number, .copy-btn {
+        .card-number, .copy-btn, .project-description {
             -webkit-user-select: text;
             -moz-user-select: text;
             -ms-user-select: text;
@@ -561,7 +561,8 @@
             50% { transform: translateY(-3px); opacity: 0.9; }
         }
 
-        .cards-container {
+        /* ТАБЛИЦА ПРОЕКТОВ */
+        .projects-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(350px, 90vw), 1fr));
             gap: min(30px, 4vh);
@@ -569,21 +570,22 @@
             max-width: min(1100px, 95vw);
         }
 
-        .card {
+        .project-card {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-color);
             border-radius: min(25px, 5vw);
-            padding: min(40px, 6vw);
+            padding: min(30px, 5vw);
             box-shadow: var(--shadow);
             transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
             animation: cardFloat 8s ease-in-out infinite;
+            cursor: pointer;
         }
 
-        .card::before {
+        .project-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -594,15 +596,20 @@
             transition: left 0.8s ease;
         }
 
-        .card:hover::before {
+        .project-card:hover::before {
             left: 100%;
         }
 
-        .card:hover {
+        .project-card:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 25px 60px var(--accent-glow);
             border-color: var(--accent-color);
             animation-play-state: paused;
+        }
+
+        .project-card.expanded {
+            max-height: 1000px;
+            transition: max-height 0.8s ease;
         }
 
         @keyframes cardFloat {
@@ -610,17 +617,20 @@
             50% { transform: translateY(-5px); }
         }
 
-        .card-header {
+        .project-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: min(30px, 4vh);
+            margin-bottom: min(20px, 3vh);
             position: relative;
-            flex-wrap: wrap;
             gap: min(15px, 3vw);
         }
 
-        .card-title {
+        .project-icon {
+            font-size: min(2.5rem, 6vw);
+            animation: iconFloat 4s ease-in-out infinite;
+        }
+
+        .project-title {
             font-size: min(1.5rem, 5vw);
             font-weight: 700;
             color: var(--text-primary);
@@ -628,58 +638,50 @@
             letter-spacing: -0.01em;
         }
 
-        .price {
-            font-size: min(2.5rem, 8vw);
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--accent-color), #00a86b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: pricePulse 3s ease-in-out infinite;
-            font-family: var(--font-accent);
-            letter-spacing: -0.02em;
+        .project-description {
+            color: var(--text-secondary);
+            font-size: min(1rem, 4vw);
+            line-height: 1.6;
+            max-height: 0;
+            overflow: hidden;
             transition: all 0.5s ease;
-            transform-style: preserve-3d;
-            perspective: 500px;
+            opacity: 0;
         }
 
-        .price:hover {
-            animation: none;
-            transform: rotateY(15deg);
+        .project-card.expanded .project-description {
+            max-height: 1000px;
+            opacity: 1;
+            margin-top: min(20px, 3vh);
         }
 
-        @keyframes pricePulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
-        }
-
-        .features {
+        .project-features {
             list-style: none;
-            margin-bottom: min(30px, 4vh);
+            margin: min(15px, 3vh) 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .project-card.expanded .project-features {
+            max-height: 1000px;
+            opacity: 1;
         }
 
         .feature {
-            padding: min(15px, 3vh) 0;
+            padding: min(10px, 2vh) 0;
             border-bottom: 1px solid var(--border-color);
             color: var(--text-secondary);
             display: flex;
             align-items: center;
-            gap: min(15px, 3vw);
+            gap: min(10px, 2vw);
             transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
-            animation: featureSlide 0.6s ease-out forwards;
-            opacity: 0;
-            font-size: min(1rem, 4vw);
+            font-size: min(0.9rem, 3.5vw);
             font-family: var(--font-primary);
             font-weight: 400;
         }
-
-        .feature:nth-child(1) { animation-delay: 0.1s; }
-        .feature:nth-child(2) { animation-delay: 0.2s; }
-        .feature:nth-child(3) { animation-delay: 0.3s; }
-        .feature:nth-child(4) { animation-delay: 0.4s; }
-        .feature:nth-child(5) { animation-delay: 0.5s; }
 
         .feature::before {
             content: '';
@@ -702,20 +704,9 @@
         }
 
         .feature-icon {
-            font-size: min(1.2rem, 4vw);
+            font-size: min(1rem, 3.5vw);
             animation: iconFloat 4s ease-in-out infinite;
             flex-shrink: 0;
-        }
-
-        .feature-icon:nth-child(1) { animation-delay: 0s; }
-        .feature-icon:nth-child(2) { animation-delay: 0.5s; }
-        .feature-icon:nth-child(3) { animation-delay: 1s; }
-        .feature-icon:nth-child(4) { animation-delay: 1.5s; }
-        .feature-icon:nth-child(5) { animation-delay: 2s; }
-
-        @keyframes featureSlide {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
         }
 
         @keyframes iconFloat {
@@ -725,226 +716,36 @@
             75% { transform: scale(1.1) rotate(-5deg); }
         }
 
-        .payment-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: min(15px, 3vh);
-        }
-
-        .payment-btn {
-            padding: min(18px, 4vh) min(25px, 5vw);
-            border: none;
-            border-radius: min(15px, 3vw);
-            font-size: min(1.1rem, 4vw);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            position: relative;
-            overflow: hidden;
-            text-align: center;
-            animation: buttonPulse 6s ease-in-out infinite;
-            font-family: var(--font-accent);
-            letter-spacing: 0.02em;
-            text-transform: none;
-        }
-
-        .payment-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.8s ease;
-        }
-
-        .payment-btn:hover::before {
-            left: 100%;
-        }
-
-        .payment-btn:hover {
-            transform: translateY(-3px);
-            animation-play-state: paused;
-        }
-
-        .card-btn {
+        .project-btn {
             background: linear-gradient(135deg, var(--accent-color), #00a86b);
             color: white;
-            box-shadow: 0 10px 30px var(--accent-glow);
-        }
-
-        .card-btn:hover {
-            box-shadow: 0 15px 40px var(--accent-glow);
-        }
-
-        .qiwi-btn {
-            background: linear-gradient(135deg, #ff6b00, #ff8c00);
-            color: white;
-            box-shadow: 0 10px 30px rgba(255, 107, 0, 0.3);
-            animation-delay: 0.5s;
-        }
-
-        .qiwi-btn:hover {
-            box-shadow: 0 15px 40px rgba(255, 107, 0, 0.5);
-        }
-
-        @keyframes buttonPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-
-        .payment-panel {
-            background: var(--bg-secondary);
-            border-radius: min(20px, 4vw);
-            padding: min(30px, 5vw);
-            margin-top: min(20px, 3vh);
-            border-left: 4px solid var(--accent-color);
-            animation: panelSlide 0.8s ease-out;
-        }
-
-        @keyframes panelSlide {
-            0% { opacity: 0; transform: translateX(30px); }
-            100% { opacity: 1; transform: translateX(0); }
-        }
-
-        .card-info {
-            background: var(--card-bg);
-            border-radius: min(15px, 3vw);
-            padding: min(25px, 4vw);
-            margin: min(20px, 3vh) 0;
-            border: 2px dashed var(--accent-color);
-            animation: cardBounce 0.8s ease-out;
-        }
-
-        @keyframes cardBounce {
-            0% { transform: scale(0.9); opacity: 0; }
-            70% { transform: scale(1.02); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .card-number {
-            font-size: min(1.4rem, 5vw);
-            font-weight: bold;
-            color: var(--accent-color);
-            letter-spacing: min(3px, 1vw);
-            margin-bottom: min(15px, 3vh);
-            font-family: var(--font-mono);
-            text-shadow: 0 0 10px var(--accent-glow);
-            word-break: break-all;
-            text-align: center;
-        }
-
-        .card-details {
-            color: var(--text-secondary);
-            font-size: min(0.95rem, 3.5vw);
-            line-height: 1.6;
-            text-align: center;
-            font-family: var(--font-primary);
-            font-weight: 400;
-        }
-
-        .copy-btn {
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-            color: white;
             border: none;
-            padding: min(15px, 3vh) min(25px, 5vw);
+            padding: min(12px, 3vh) min(20px, 4vw);
             border-radius: min(10px, 2vw);
             cursor: pointer;
             margin-top: min(15px, 3vh);
             transition: all 0.4s ease;
             font-weight: 600;
-            font-size: min(1rem, 3.5vw);
+            font-size: min(0.9rem, 3.5vw);
             width: 100%;
             font-family: var(--font-accent);
             letter-spacing: 0.02em;
-        }
-
-        .copy-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(33, 150, 243, 0.4);
-        }
-
-        .info-section {
-            background: var(--bg-secondary);
-            border-radius: min(25px, 5vw);
-            padding: min(40px, 6vw);
-            margin-top: min(40px, 6vh);
-            border: 1px solid var(--border-color);
+            text-decoration: none;
+            display: inline-block;
             text-align: center;
-            max-width: min(800px, 90vw);
-            animation: infoFloat 10s ease-in-out infinite;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
         }
 
-        @keyframes infoFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-3px); }
+        .project-card.expanded .project-btn {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .info-title {
-            font-size: min(1.8rem, 6vw);
-            margin-bottom: min(25px, 4vh);
-            color: var(--accent-color);
-            animation: titlePulse 4s ease-in-out infinite;
-            font-family: var(--font-heading);
-            font-weight: 700;
-            letter-spacing: -0.01em;
-        }
-
-        @keyframes titlePulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.9; }
-        }
-
-        .info-steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(150px, 40vw), 1fr));
-            gap: min(20px, 3vw);
-            margin-top: min(30px, 4vh);
-        }
-
-        .step {
-            padding: min(20px, 3vw);
-            background: var(--accent-glow);
-            border-radius: min(15px, 3vw);
-            transition: all 0.4s ease;
-            animation: stepFloat 8s ease-in-out infinite;
-        }
-
-        .step:nth-child(1) { animation-delay: 0s; }
-        .step:nth-child(2) { animation-delay: 1s; }
-        .step:nth-child(3) { animation-delay: 2s; }
-        .step:nth-child(4) { animation-delay: 3s; }
-
-        .step:hover {
-            transform: translateY(-5px);
-            background: var(--accent-color);
-            color: white;
-            animation-play-state: paused;
-        }
-
-        .step-number {
-            font-size: min(2rem, 6vw);
-            font-weight: 800;
-            color: var(--accent-color);
-            margin-bottom: min(10px, 2vh);
-            transition: all 0.4s ease;
-            font-family: var(--font-heading);
-        }
-
-        .step:hover .step-number {
-            color: white;
-        }
-
-        .step p {
-            font-size: min(0.9rem, 3.5vw);
-            font-family: var(--font-primary);
-            font-weight: 400;
-        }
-
-        @keyframes stepFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-2px); }
+        .project-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px var(--accent-glow);
         }
 
         .notification {
@@ -1040,17 +841,13 @@
                 font-size: min(1rem, 4vw);
             }
             
-            .cards-container {
+            .projects-container {
                 grid-template-columns: 1fr;
                 gap: min(20px, 3vh);
             }
             
-            .card {
+            .project-card {
                 padding: min(25px, 5vw);
-            }
-            
-            .payment-btn {
-                font-size: min(1rem, 3.5vw);
             }
         }
 
@@ -1069,36 +866,23 @@
                 padding: 0 10px;
             }
             
-            .card {
+            .project-card {
                 padding: min(20px, 4vw);
             }
             
-            .card-header {
+            .project-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: min(10px, 2vh);
-            }
-            
-            .price {
-                font-size: min(2rem, 7vw);
             }
             
             .feature {
                 font-size: min(0.9rem, 3.5vw);
             }
             
-            .payment-btn {
+            .project-btn {
                 padding: min(15px, 3vh) min(20px, 4vw);
                 font-size: min(0.9rem, 3.5vw);
-            }
-            
-            .info-section {
-                padding: min(25px, 5vw);
-            }
-            
-            .info-steps {
-                grid-template-columns: 1fr;
-                gap: min(15px, 2vh);
             }
         }
 
@@ -1117,7 +901,7 @@
                 padding: 5px 10px;
             }
             
-            .card {
+            .project-card {
                 padding: 15px 10px;
             }
             
@@ -1142,11 +926,11 @@
                 margin-bottom: 15px;
             }
             
-            .cards-container {
+            .projects-container {
                 gap: 15px;
             }
             
-            .card {
+            .project-card {
                 padding: 20px;
             }
         }
@@ -1193,7 +977,7 @@
             </div>
         </div>
         <div class="loading-text">Kxllstellar</div>
-        <div class="loading-subtext">Загрузка премиум возможностей...</div>
+        <div class="loading-subtext">Загрузка проектов...</div>
         <div class="progress-bar">
             <div class="progress"></div>
         </div>
@@ -1232,104 +1016,103 @@
                 </div>
                 <div class="logo-text">KXLLSTELLAR</div>
             </div>
-            <p class="subtitle">Эксклюзивные премиум возможности для вашего бота ВКонтакте с расширенной функциональностью</p>
+            <p class="subtitle">Мои проекты и разработки для платформы ВКонтакте</p>
         </div>
 
-        <div class="cards-container">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">💎 Премиум на 30 дней</h2>
-                    <div class="price">100 ₽</div>
+        <div class="projects-container">
+            <div class="project-card" id="sufistBotCard">
+                <div class="project-header">
+                    <div class="project-icon">🤖</div>
+                    <h2 class="project-title">Суфист Бот</h2>
                 </div>
-                
-                <ul class="features">
+                <p class="project-description">
+                    Многофункциональный страничный бот для чатов ВКонтакте с расширенными возможностями модерации и развлечения. 
+                    Бот помогает управлять беседами, предоставляет полезные команды и создает веселую атмосферу в чате.
+                </p>
+                <ul class="project-features">
                     <li class="feature">
-                        <span class="feature-icon">🔄</span>
-                        <span>Команда /повтори - бот повторяет сообщения</span>
+                        <span class="feature-icon">🛡️</span>
+                        <span>Система модерации с автоматическим удалением нарушений</span>
                     </li>
                     <li class="feature">
-                        <span class="feature-icon">🗑️</span>
-                        <span>Удаление сообщений бота в беседах</span>
+                        <span class="feature-icon">🎮</span>
+                        <span>Мини-игры для развлечения участников беседы</span>
                     </li>
                     <li class="feature">
                         <span class="feature-icon">📊</span>
-                        <span>Расширенная статистика работы</span>
+                        <span>Статистика активности участников и сообщества</span>
                     </li>
                     <li class="feature">
-                        <span class="feature-icon">🛡️</span>
-                        <span>Приоритетная поддержка 24/7</span>
+                        <span class="feature-icon">🔧</span>
+                        <span>Гибкие настройки и кастомизация команд</span>
                     </li>
                     <li class="feature">
-                        <span class="feature-icon">⭐</span>
-                        <span>Специальный статус модератора</span>
+                        <span class="feature-icon">⚡</span>
+                        <span>Быстрое реагирование и стабильная работа 24/7</span>
                     </li>
                 </ul>
-
-                <div class="payment-buttons">
-                    <button class="payment-btn card-btn" onclick="showCardPayment()">
-                        💳 Перевод на карту
-                    </button>
-                    
-                    <button class="payment-btn qiwi-btn" onclick="showQiwiPayment()">
-                        🥝 QIWI Кошелек
-                    </button>
-                </div>
-
-                <div class="payment-panel" id="paymentPanel">
-                    <div style="text-align: center;">
-                        <strong style="color: var(--accent-color); font-size: min(1.2rem, 4vw);">🎯 Выберите способ оплаты</strong>
-                        <p style="color: var(--text-secondary); margin-top: 10px; font-size: min(0.9rem, 3.5vw);">
-                            Реквизиты появятся здесь после выбора
-                        </p>
-                    </div>
-                </div>
+                <a href="https://vk.com/id22204798" class="project-btn" target="_blank">
+                    Перейти к боту ВКонтакте
+                </a>
             </div>
-        </div>
 
-        <div class="info-section">
-            <h3 class="info-title">💡 Как получить доступ?</h3>
-            <div class="info-steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <p>Выберите способ оплаты выше</p>
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-icon">💎</div>
+                    <h2 class="project-title">Kxllstellar Utils</h2>
                 </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <p>Переведите 100 рублей</p>
+                <p class="project-description">
+                    Набор утилит и инструментов для разработчиков ВКонтакте. 
+                    Упрощает работу с API, предоставляет готовые решения для常见 задач.
+                </p>
+                <ul class="project-features">
+                    <li class="feature">
+                        <span class="feature-icon">🔌</span>
+                        <span>Упрощенное взаимодействие с VK API</span>
+                    </li>
+                    <li class="feature">
+                        <span class="feature-icon">📦</span>
+                        <span>Готовые модули для быстрой разработки</span>
+                    </li>
+                </ul>
+                <button class="project-btn">
+                    Скоро будет доступно
+                </button>
+            </div>
+
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-icon">🚀</div>
+                    <h2 class="project-title">VK Community Manager</h2>
                 </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <p>Пришлите скриншот боту</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <p>Получите статус за 5 минут!</p>
-                </div>
+                <p class="project-description">
+                    Инструмент для управления сообществами ВКонтакте с расширенной аналитикой 
+                    и автоматизацией рутинных задач.
+                </p>
+                <ul class="project-features">
+                    <li class="feature">
+                        <span class="feature-icon">📈</span>
+                        <span>Детальная аналитика активности сообщества</span>
+                    </li>
+                    <li class="feature">
+                        <span class="feature-icon">🤖</span>
+                        <span>Автоматизация публикаций и модерации</span>
+                    </li>
+                </ul>
+                <button class="project-btn">
+                    В разработке
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Данные для оплаты
-        const PAYMENT_DATA = {
-            card: {
-                number: '2200 1234 5678 9012',
-                bank: 'Тинькофф',
-                name: 'Иван Иванов',
-                comment: 'Kxllstellar премиум'
-            },
-            qiwi: {
-                number: '+7 999 123-45-67',
-                name: 'Иван И.',
-                comment: 'Kxllstellar премиум на 30 дней'
-            }
-        };
-
         // Управление музыкой
         let isMusicPlaying = false;
         let audioFadeInterval;
         let lastScrollY = 0;
         let isScrollingDown = false;
+        let userInteracted = false;
 
         // Инициализация скролла для кнопок
         function initScrollBehavior() {
@@ -1362,10 +1145,9 @@
             
             // Для iOS и Safari - ждем первого взаимодействия
             const startMusic = () => {
-                if (!isMusicPlaying) {
+                if (!userInteracted) {
+                    userInteracted = true;
                     playMusic();
-                    document.removeEventListener('click', startMusic);
-                    document.removeEventListener('touchstart', startMusic);
                 }
             };
             
@@ -1375,7 +1157,7 @@
             
             // Автоматическое включение музыки после загрузки для других браузеров
             setTimeout(() => {
-                if (!isMusicPlaying) {
+                if (!isMusicPlaying && !isIOS()) {
                     playMusic();
                 }
             }, 2000);
@@ -1407,12 +1189,21 @@
                     }, 500);
                 }
             });
+
+            // Обработчик фокуса окна
+            window.addEventListener('focus', function() {
+                if (isMusicPlaying) {
+                    setTimeout(() => {
+                        playMusic();
+                    }, 500);
+                }
+            });
         }
 
         function playMusic() {
             const audio = document.getElementById('backgroundMusic');
             
-            if (audio.paused && !isMusicPlaying) {
+            if (audio.paused && !isMusicPlaying && userInteracted) {
                 // Устанавливаем низкую громкость для плавного включения
                 audio.volume = 0.1;
                 
@@ -1429,11 +1220,6 @@
                     }).catch(error => {
                         console.log('Autoplay prevented:', error);
                         isMusicPlaying = false;
-                        
-                        // Показываем уведомление о необходимости взаимодействия для iOS
-                        if (isIOS()) {
-                            showNotification('🎵 Нажмите на экран для включения музыки');
-                        }
                     });
                 }
             }
@@ -1525,6 +1311,30 @@
             }
         }
 
+        // Управление проектами
+        function initProjects() {
+            const projectCards = document.querySelectorAll('.project-card');
+            
+            projectCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Игнорируем клики по кнопкам
+                    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+                        return;
+                    }
+                    
+                    // Закрываем другие открытые карточки
+                    projectCards.forEach(otherCard => {
+                        if (otherCard !== this && otherCard.classList.contains('expanded')) {
+                            otherCard.classList.remove('expanded');
+                        }
+                    });
+                    
+                    // Переключаем текущую карточку
+                    this.classList.toggle('expanded');
+                });
+            });
+        }
+
         // Эффект искажения сетки при наведении мыши
         function initGridDistortion() {
             const gridDistortion = document.getElementById('gridDistortion');
@@ -1570,77 +1380,6 @@
             }, 2500);
         }
 
-        // Показ реквизитов карты
-        function showCardPayment() {
-            const data = PAYMENT_DATA.card;
-            const panel = document.getElementById('paymentPanel');
-            
-            panel.innerHTML = `
-                <div style="animation: fadeInUp 0.5s ease-out;">
-                    <strong style="color: var(--accent-color); font-size: min(1.2rem, 4vw);">💳 Перевод на карту:</strong>
-                    <div class="card-info">
-                        <div class="card-number">${formatCardNumber(data.number)}</div>
-                        <div class="card-details">
-                            <strong>Банк:</strong> ${data.bank}<br>
-                            <strong>Получатель:</strong> ${data.name}<br>
-                            <strong>Сумма:</strong> 100 рублей<br>
-                            <strong>Комментарий:</strong> ${data.comment}
-                        </div>
-                    </div>
-                    <button class="copy-btn" onclick="copyToClipboard('${data.number}')">
-                        📋 Скопировать номер карты
-                    </button>
-                    <p style="color: var(--text-secondary); font-size: min(0.9rem, 3.5vw); margin-top: 15px;">
-                        ⚡ После перевода пришлите скриншот боту для активации
-                    </p>
-                </div>
-            `;
-            
-            showNotification('💳 Реквизиты карты показаны');
-        }
-
-        // Показ реквизитов QIWI
-        function showQiwiPayment() {
-            const data = PAYMENT_DATA.qiwi;
-            const panel = document.getElementById('paymentPanel');
-            
-            panel.innerHTML = `
-                <div style="animation: fadeInUp 0.5s ease-out;">
-                    <strong style="color: var(--accent-color); font-size: min(1.2rem, 4vw);">🥝 QIWI Кошелек:</strong>
-                    <div class="card-info">
-                        <div class="card-number">${data.number}</div>
-                        <div class="card-details">
-                            <strong>Получатель:</strong> ${data.name}<br>
-                            <strong>Сумма:</strong> 100 рублей<br>
-                            <strong>Комментарий:</strong> ${data.comment}
-                        </div>
-                    </div>
-                    <button class="copy-btn" onclick="copyToClipboard('${data.number}')">
-                        📋 Скопировать номер QIWI
-                    </button>
-                    <p style="color: var(--text-secondary); font-size: min(0.9rem, 3.5vw); margin-top: 15px;">
-                        ⚡ После перевода пришлите скриншот боту для активации
-                    </p>
-                </div>
-            `;
-            
-            showNotification('🥝 Реквизиты QIWI показаны');
-        }
-
-        // Форматирование номера карты
-        function formatCardNumber(number) {
-            return number.replace(/(\d{4})/g, '$1 ').trim();
-        }
-
-        // Копирование в буфер обмена
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text.replace(/\s/g, '')).then(() => {
-                showNotification('✅ Скопировано в буфер обмена!');
-            }).catch(() => {
-                showNotification('❌ Не удалось скопировать');
-            });
-        }
-
         // Показать уведомление с эффектом затухания
         function showNotification(message) {
             const notification = document.getElementById('notification');
@@ -1664,6 +1403,9 @@
             
             // Инициализация поведения скролла
             initScrollBehavior();
+            
+            // Инициализация проектов
+            initProjects();
             
             // Инициализация эффекта искажения сетки
             initGridDistortion();
@@ -1712,7 +1454,7 @@
         // Защита от копирования текста (только для реквизитов)
         document.addEventListener('copy', function(e) {
             // Разрешаем копирование только из элементов с классом card-number или copy-btn
-            if (!e.target.classList.contains('card-number') && !e.target.classList.contains('copy-btn')) {
+            if (!e.target.classList.contains('project-description') && !e.target.classList.contains('project-btn')) {
                 e.preventDefault();
                 showNotification('🚫 Копирование текста отключено');
             }
