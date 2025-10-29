@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0066cc">
+    <title>Kxllstellar | Проекты</title>
+    
+    <!-- Шрифты -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .project-description, .project-btn {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --accent-color: #00ff88;
+            --accent-glow: rgba(0, 255, 136, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --card-bg: rgba(26, 26, 26, 0.95);
+            --shadow: 0 0 50px rgba(0, 255, 136, 0.15);
+            --border-color: rgba(0, 255, 136, 0.25);
+            --grid-color: rgba(0, 255, 136, 0.08);
+            --safe-area-top: env(safe-area-inset-top, 44px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 34px);
+            --safe-area-left: env(safe-area-inset-left, 0px);
+            --safe-area-right: env(safe-area-inset-right, 0px);
+            --dynamic-island-height: 52px;
+            
+            /* Шрифты */
+            --font-primary: 'Rajdhani', 'Orbitron', sans-serif;
+            --font-heading: 'Orbitron', 'Audiowide', sans-serif;
+            --font-accent: 'Exo 2', 'Rajdhani', sans-serif;
+            --font-mono: 'Audiowide', 'Courier New', monospace;
+            
+            /* Анимационные переменные */
+            --music-pulse: 1;
+            --grid-pulse: 1;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #e0e0e0;
+            --accent-color: #0066cc;
+            --accent-glow: rgba(0, 102, 204, 0.4);
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow: 0 8px 40px rgba(0, 102, 204, 0.2);
+            --border-color: rgba(0, 102, 204, 0.3);
+            --grid-color: rgba(0, 102, 204, 0.1);
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            transition: all 0.5s ease;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            font-weight: 400;
+            line-height: 1.6;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .safe-area-top {
+            height: var(--safe-area-top);
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .safe-area-bottom {
+            height: var(--safe-area-bottom);
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: 9998;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        /* ПОСТЕПЕННОЕ РАЗМЫТИЕ ВНИЗУ */
+        .gradual-blur {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(
+                to top,
+                var(--bg-primary) 0%,
+                transparent 100%
+            );
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            mask: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 0) 100%
+            );
+            -webkit-mask: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 0) 100%
+            );
+            z-index: 9997;
+            pointer-events: none;
+        }
+
+        [data-theme="light"] .gradual-blur {
+            background: linear-gradient(
+                to top,
+                var(--bg-primary) 0%,
+                transparent 100%
+            );
+        }
+
+        /* УЛУЧШЕННАЯ АНИМАЦИЯ ЗАГРУЗКИ */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.98);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+        }
+
+        [data-theme="light"] .loading-screen {
+            background: rgba(245, 245, 245, 0.98);
+        }
+
+        .enhanced-loader {
+            position: relative;
+            width: min(120px, 25vw);
+            height: min(120px, 25vw);
+            margin-bottom: min(40px, 8vh);
+        }
+
+        .outer-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .middle-ring {
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 70%;
+            height: 70%;
+            border: 2px solid transparent;
+            border-right: 2px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spinReverse 1.5s linear infinite;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .diamond-core {
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            width: 40%;
+            height: 40%;
+            background: linear-gradient(135deg, var(--accent-color), #00a86b, #00ff88);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            animation: pulseGlow 3s ease-in-out infinite, rotate3D 8s linear infinite;
+            box-shadow: 
+                0 0 30px var(--accent-glow),
+                inset 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        [data-theme="light"] .diamond-core {
+            background: linear-gradient(135deg, #0066cc, #0088ff, #00aaff);
+            box-shadow: 
+                0 0 30px rgba(0, 102, 204, 0.6),
+                inset 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            animation: floatParticle 4s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 80%; left: 10%; animation-delay: 1s; }
+        .particle:nth-child(3) { top: 60%; left: 80%; animation-delay: 2s; }
+        .particle:nth-child(4) { top: 20%; left: 70%; animation-delay: 3s; }
+        .particle:nth-child(5) { top: 90%; left: 60%; animation-delay: 0.5s; }
+        .particle:nth-child(6) { top: 40%; left: 90%; animation-delay: 1.5s; }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes spinReverse {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { 
+                transform: scale(1);
+                filter: brightness(1) drop-shadow(0 0 10px var(--accent-glow));
+            }
+            50% { 
+                transform: scale(1.1);
+                filter: brightness(1.3) drop-shadow(0 0 20px var(--accent-color));
+            }
+        }
+
+        @keyframes rotate3D {
+            0% { transform: rotateY(0deg) rotateX(0deg); }
+            25% { transform: rotateY(90deg) rotateX(45deg); }
+            50% { transform: rotateY(180deg) rotateX(0deg); }
+            75% { transform: rotateY(270deg) rotateX(45deg); }
+            100% { transform: rotateY(360deg) rotateX(0deg); }
+        }
+
+        @keyframes floatParticle {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 0.7;
+            }
+            25% { 
+                transform: translate(10px, -10px) scale(1.2);
+                opacity: 1;
+            }
+            50% { 
+                transform: translate(5px, 5px) scale(0.8);
+                opacity: 0.5;
+            }
+            75% { 
+                transform: translate(-10px, 5px) scale(1.1);
+                opacity: 0.9;
+            }
+        }
+
+        .loading-text {
+            font-size: min(1.5rem, 6vw);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: min(15px, 3vh);
+            animation: textPulse 2s ease-in-out infinite;
+            text-align: center;
+            padding: 0 20px;
+            font-family: var(--font-heading);
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+
+        .loading-subtext {
+            font-size: min(1rem, 4vw);
+            color: var(--text-secondary);
+            animation: textPulse 2s ease-in-out infinite 0.5s;
+            text-align: center;
+            padding: 0 20px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        .progress-bar {
+            width: min(250px, 80vw);
+            height: 4px;
+            background: var(--bg-secondary);
+            border-radius: 2px;
+            margin-top: min(25px, 5vh);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), #00a86b, #00ff88);
+            border-radius: 2px;
+            animation: progressLoad 2.5s ease-in-out forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="light"] .progress {
+            background: linear-gradient(90deg, #0066cc, #0088ff, #00aaff);
+        }
+
+        .progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progressShine 1.5s ease-in-out infinite;
+        }
+
+        @keyframes progressLoad {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes progressShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes textPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+        }
+
+        /* УМЕНЬШЕННЫЙ ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ */
+        .theme-toggle {
+            position: fixed;
+            top: max(20px, calc(var(--safe-area-top) + 5px));
+            right: max(15px, var(--safe-area-right));
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .theme-toggle.hidden {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px; /* Уменьшено с 60px */
+            height: 28px; /* Уменьшено с 34px */
+        }
+
+        .switch #themeInput {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2196f3;
+            -webkit-transition: 0.4s;
+            transition: 0.4s;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .sun-moon {
+            position: absolute;
+            content: "";
+            height: 20px; /* Уменьшено с 26px */
+            width: 20px; /* Уменьшено с 26px */
+            left: 4px;
+            bottom: 4px;
+            background-color: yellow;
+            -webkit-transition: 0.4s;
+            transition: 0.4s;
+        }
+
+        #themeInput:checked + .slider {
+            background-color: black;
+        }
+
+        #themeInput:focus + .slider {
+            box-shadow: 0 0 1px #2196f3;
+        }
+
+        #themeInput:checked + .slider .sun-moon {
+            -webkit-transform: translateX(22px); /* Уменьшено с 26px */
+            -ms-transform: translateX(22px);
+            transform: translateX(22px);
+            background-color: white;
+            -webkit-animation: rotate-center 0.6s ease-in-out both;
+            animation: rotate-center 0.6s ease-in-out both;
+        }
+
+        .moon-dot {
+            opacity: 0;
+            transition: 0.4s;
+            fill: gray;
+        }
+
+        #themeInput:checked + .slider .sun-moon .moon-dot {
+            opacity: 1;
+        }
+
+        .slider.round {
+            border-radius: 28px; /* Уменьшено с 34px */
+        }
+
+        .slider.round .sun-moon {
+            border-radius: 50%;
+        }
+
+        #moon-dot-1 {
+            left: 8px; /* Уменьшено */
+            top: 2px; /* Уменьшено */
+            position: absolute;
+            width: 5px; /* Уменьшено */
+            height: 5px; /* Уменьшено */
+            z-index: 4;
+        }
+
+        #moon-dot-2 {
+            left: 2px; /* Уменьшено */
+            top: 8px; /* Уменьшено */
+            position: absolute;
+            width: 8px; /* Уменьшено */
+            height: 8px; /* Уменьшено */
+            z-index: 4;
+        }
+
+        #moon-dot-3 {
+            left: 13px; /* Уменьшено */
+            top: 15px; /* Уменьшено */
+            position: absolute;
+            width: 2px; /* Уменьшено */
+            height: 2px; /* Уменьшено */
+            z-index: 4;
+        }
+
+        #light-ray-1 {
+            left: -6px; /* Уменьшено */
+            top: -6px; /* Уменьшено */
+            position: absolute;
+            width: 35px; /* Уменьшено */
+            height: 35px; /* Уменьшено */
+            z-index: -1;
+            fill: white;
+            opacity: 10%;
+        }
+
+        #light-ray-2 {
+            left: -50%;
+            top: -50%;
+            position: absolute;
+            width: 45px; /* Уменьшено */
+            height: 45px; /* Уменьшено */
+            z-index: -1;
+            fill: white;
+            opacity: 10%;
+        }
+
+        #light-ray-3 {
+            left: -14px; /* Уменьшено */
+            top: -14px; /* Уменьшено */
+            position: absolute;
+            width: 48px; /* Уменьшено */
+            height: 48px; /* Уменьшено */
+            z-index: -1;
+            fill: white;
+            opacity: 10%;
+        }
+
+        .cloud-light {
+            position: absolute;
+            fill: #eee;
+            animation-name: cloud-move;
+            animation-duration: 6s;
+            animation-iteration-count: infinite;
+        }
+
+        .cloud-dark {
+            position: absolute;
+            fill: #ccc;
+            animation-name: cloud-move;
+            animation-duration: 6s;
+            animation-iteration-count: infinite;
+            animation-delay: 1s;
+        }
+
+        #cloud-1 {
+            left: 25px; /* Уменьшено */
+            top: 12px; /* Уменьшено */
+            width: 32px; /* Уменьшено */
+        }
+
+        #cloud-2 {
+            left: 36px; /* Уменьшено */
+            top: 8px; /* Уменьшено */
+            width: 16px; /* Уменьшено */
+        }
+
+        #cloud-3 {
+            left: 15px; /* Уменьшено */
+            top: 19px; /* Уменьшено */
+            width: 24px; /* Уменьшено */
+        }
+
+        #cloud-4 {
+            left: 29px; /* Уменьшено */
+            top: 14px; /* Уменьшено */
+            width: 32px; /* Уменьшено */
+        }
+
+        #cloud-5 {
+            left: 38px; /* Уменьшено */
+            top: 11px; /* Уменьшено */
+            width: 16px; /* Уменьшено */
+        }
+
+        #cloud-6 {
+            left: 18px; /* Уменьшено */
+            top: 21px; /* Уменьшено */
+            width: 24px; /* Уменьшено */
+        }
+
+        @keyframes cloud-move {
+            0% {
+                transform: translateX(0px);
+            }
+
+            40% {
+                transform: translateX(4px);
+            }
+
+            80% {
+                transform: translateX(-4px);
+            }
+
+            100% {
+                transform: translateX(0px);
+            }
+        }
+
+        .stars {
+            transform: translateY(-25px); /* Уменьшено */
+            opacity: 0;
+            transition: 0.4s;
+        }
+
+        .star {
+            fill: white;
+            position: absolute;
+            -webkit-transition: 0.4s;
+            transition: 0.4s;
+            animation-name: star-twinkle;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+        }
+
+        #themeInput:checked + .slider .stars {
+            -webkit-transform: translateY(0);
+            -ms-transform: translateY(0);
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        #star-1 {
+            width: 16px; /* Уменьшено */
+            top: 2px;
+            left: 2px; /* Уменьшено */
+            animation-delay: 0.3s;
+        }
+
+        #star-2 {
+            width: 5px; /* Уменьшено */
+            top: 13px; /* Уменьшено */
+            left: 2px; /* Уменьшено */
+        }
+
+        #star-3 {
+            width: 10px; /* Уменьшено */
+            top: 16px; /* Уменьшено */
+            left: 8px; /* Уменьшено */
+            animation-delay: 0.6s;
+        }
+
+        #star-4 {
+            width: 14px; /* Уменьшено */
+            top: 0px;
+            left: 14px; /* Уменьшено */
+            animation-delay: 1.3s;
+        }
+
+        @keyframes star-twinkle {
+            0% {
+                transform: scale(1);
+            }
+
+            40% {
+                transform: scale(1.2);
+            }
+
+            80% {
+                transform: scale(0.8);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes rotate-center {
+            0% {
+                transform: translateX(22px) rotate(0); /* Уменьшено с 26px */
+            }
+            100% {
+                transform: translateX(22px) rotate(360deg); /* Уменьшено с 26px */
+            }
+        }
+
+        /* УЛУЧШЕННЫЙ ФОН С ЭМОДЗИ */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .grid-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: min(50px, 10vw) min(50px, 10vw);
+            animation: gridMove 40s linear infinite;
+            transform-origin: 0 0;
+            transition: all 0.5s ease;
+            opacity: var(--grid-pulse);
+        }
+
+        .grid-distortion {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                transparent 0%, 
+                var(--accent-glow) 30%, 
+                transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        /* ПЛАВАЮЩИЕ ЭМОДЗИ НА ФОНЕ */
+        .floating-emojis {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            font-size: min(2rem, 6vw);
+            opacity: 0.08;
+            animation: floatEmoji 25s linear infinite;
+            filter: brightness(var(--music-pulse));
+            text-shadow: 0 0 10px currentColor;
+            color: var(--accent-color);
+        }
+
+        [data-theme="light"] .floating-emoji {
+            opacity: 0.1;
+            color: #0066cc;
+        }
+
+        @keyframes floatEmoji {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 0.08;
+            }
+            25% {
+                transform: translate(100px, 80px) rotate(90deg) scale(1.1);
+                opacity: 0.12;
+            }
+            50% {
+                transform: translate(50px, 150px) rotate(180deg) scale(0.9);
+                opacity: 0.08;
+            }
+            75% {
+                transform: translate(-80px, 100px) rotate(270deg) scale(1.05);
+                opacity: 0.12;
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg) scale(1);
+                opacity: 0.08;
+            }
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(-25px, -25px) scale(1.02); }
+            50% { transform: translate(-50px, -50px) scale(1); }
+            75% { transform: translate(-25px, -25px) scale(0.98); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        .container {
+            max-width: min(1200px, 95vw);
+            margin: 0 auto;
+            padding: max(80px, var(--safe-area-top)) max(20px, var(--safe-area-left)) max(40px, var(--safe-area-bottom));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            filter: blur(0px);
+            transition: filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .container.blurred {
+            filter: blur(15px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: min(60px, 8vh);
+            position: relative;
+            width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: min(15px, 3vw);
+            margin-bottom: min(20px, 4vh);
+            flex-wrap: wrap;
+        }
+
+        .logo-animation {
+            position: relative;
+            width: min(180px, 35vw);
+            height: min(180px, 35vw);
+            margin-bottom: min(20px, 4vh);
+        }
+
+        .diamond-frame {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid var(--accent-color);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            box-shadow: 
+                0 0 30px var(--accent-glow),
+                inset 0 0 30px var(--accent-glow);
+            animation: frameGlow 3s ease-in-out infinite;
+        }
+
+        [data-theme="light"] .diamond-frame {
+            box-shadow: 
+                0 0 30px rgba(0, 102, 204, 0.6),
+                inset 0 0 30px rgba(0, 102, 204, 0.4);
+        }
+
+        @keyframes frameGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 30px var(--accent-glow),
+                    inset 0 0 30px var(--accent-glow);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 50px var(--accent-color),
+                    inset 0 0 50px var(--accent-color);
+            }
+        }
+
+        .diamond-core-large {
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 70%;
+            height: 70%;
+            background: linear-gradient(135deg, var(--accent-color), #00a86b, #00ff88, #00a86b);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            animation: diamondRotateHorizontal 8s linear infinite;
+            box-shadow: 
+                0 0 50px var(--accent-glow),
+                inset 0 0 30px rgba(255, 255, 255, 0.5);
+            filter: brightness(1.2);
+            transform-style: preserve-3d;
+        }
+
+        [data-theme="light"] .diamond-core-large {
+            background: linear-gradient(135deg, #0066cc, #0088ff, #00aaff, #0088ff);
+            box-shadow: 
+                0 0 50px rgba(0, 102, 204, 0.6),
+                inset 0 0 30px rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes diamondRotateHorizontal {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        /* ИСПРАВЛЕННЫЙ ТЕКСТ ДЛЯ СВЕТЛОЙ И ТЕМНОЙ ТЕМЫ */
+        .logo-text {
+            font-size: min(3.5rem, 12vw);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-color), #00a86b, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: titleGlow 4s ease-in-out infinite alternate, gradientShift 5s ease-in-out infinite;
+            line-height: 1.2;
+            text-align: center;
+            font-family: var(--font-heading);
+            letter-spacing: -0.03em;
+            text-transform: uppercase;
+            margin-bottom: 0;
+            position: relative;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+
+        [data-theme="light"] .logo-text {
+            background: linear-gradient(135deg, #0066cc, #0088ff, #00aaff, #0066cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: titleGlowLight 4s ease-in-out infinite alternate, gradientShift 5s ease-in-out infinite, textShineLight 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        /* Эффект блеска под текстом в светлой теме */
+        [data-theme="light"] .logo-text::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #0066cc, #0088ff, #00aaff, #0088ff, #0066cc, transparent);
+            background-size: 200% 100%;
+            animation: shineUnderline 2s ease-in-out infinite;
+            border-radius: 2px;
+            opacity: 0.8;
+        }
+
+        /* Эффект блеска под текстом в темной теме */
+        .logo-text::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00ff88, #00a86b, #00ff88, #00a86b, #00ff88, transparent);
+            background-size: 200% 100%;
+            animation: shineUnderline 2s ease-in-out infinite;
+            border-radius: 2px;
+            opacity: 0.8;
+        }
+
+        .logo-text:hover {
+            animation: titleGlow 2s ease-in-out infinite alternate, gradientShift 2s ease-in-out infinite, textShine 1.5s ease-in-out;
+            transform: scale(1.05);
+        }
+
+        [data-theme="light"] .logo-text:hover {
+            animation: titleGlowLight 2s ease-in-out infinite alternate, gradientShift 2s ease-in-out infinite, textShineLight 1.5s ease-in-out infinite;
+            transform: scale(1.05);
+        }
+
+        .subtitle {
+            font-size: min(1.2rem, 4.5vw);
+            color: var(--text-secondary);
+            max-width: min(600px, 90vw);
+            margin: 0 auto;
+            line-height: 1.6;
+            animation: subtitleFloat 5s ease-in-out infinite;
+            text-align: center;
+            padding: 0 min(20px, 5vw);
+            font-weight: 500;
+            font-family: var(--font-primary);
+            letter-spacing: 0.01em;
+        }
+
+        @keyframes titleGlow {
+            0% { 
+                filter: drop-shadow(0 0 10px var(--accent-glow)); 
+                background-position: 0% 50%;
+            }
+            50% { 
+                filter: drop-shadow(0 0 20px var(--accent-glow)); 
+                background-position: 100% 50%;
+            }
+            100% { 
+                filter: drop-shadow(0 0 10px var(--accent-glow)); 
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes titleGlowLight {
+            0% { 
+                filter: drop-shadow(0 0 5px rgba(0, 102, 204, 0.3)); 
+                background-position: 0% 50%;
+            }
+            50% { 
+                filter: drop-shadow(0 0 15px rgba(0, 102, 204, 0.6)); 
+                background-position: 100% 50%;
+            }
+            100% { 
+                filter: drop-shadow(0 0 5px rgba(0, 102, 204, 0.3)); 
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes textShine {
+            0% { text-shadow: 0 0 5px var(--accent-color); }
+            50% { text-shadow: 0 0 20px var(--accent-color), 0 0 30px var(--accent-color); }
+            100% { text-shadow: 0 0 5px var(--accent-color); }
+        }
+
+        @keyframes textShineLight {
+            0%, 100% { 
+                text-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+            }
+            25% { 
+                text-shadow: 0 0 10px rgba(0, 102, 204, 0.5), 0 0 15px rgba(0, 102, 204, 0.3);
+            }
+            50% { 
+                text-shadow: 0 0 15px rgba(0, 102, 204, 0.7), 0 0 20px rgba(0, 102, 204, 0.4);
+            }
+            75% { 
+                text-shadow: 0 0 10px rgba(0, 102, 204, 0.5), 0 0 15px rgba(0, 102, 204, 0.3);
+            }
+        }
+
+        @keyframes shineUnderline {
+            0% {
+                background-position: -200% 0;
+                opacity: 0.6;
+            }
+            50% {
+                background-position: 200% 0;
+                opacity: 1;
+            }
+            100% {
+                background-position: -200% 0;
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes subtitleFloat {
+            0%, 100% { transform: translateY(0px); opacity: 1; }
+            50% { transform: translateY(-3px); opacity: 0.9; }
+        }
+
+        /* ТАБЛИЦА ПРОЕКТОВ */
+        .projects-container {
+            display: flex;
+            flex-direction: column;
+            gap: min(30px, 4vh);
+            width: 100%;
+            max-width: min(800px, 95vw);
+        }
+
+        .main-project-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border-color);
+            border-radius: min(25px, 5vw);
+            padding: min(40px, 6vw);
+            box-shadow: var(--shadow);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            animation: cardFloat 8s ease-in-out infinite;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        [data-theme="light"] .main-project-card {
+            border: 1px solid rgba(0, 102, 204, 0.3);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .main-project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .main-project-card:hover::before {
+            left: 100%;
+        }
+
+        .main-project-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 60px var(--accent-glow);
+            border-color: var(--accent-color);
+            animation-play-state: paused;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .project-icon-small {
+            position: relative;
+            width: min(60px, 12vw);
+            height: min(60px, 12vw);
+            margin: 0 auto min(20px, 3vh);
+        }
+
+        .diamond-frame-small {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--accent-color);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            box-shadow: 
+                0 0 15px var(--accent-glow),
+                inset 0 0 15px var(--accent-glow);
+            animation: frameGlowSmall 3s ease-in-out infinite;
+        }
+
+        [data-theme="light"] .diamond-frame-small {
+            box-shadow: 
+                0 0 15px rgba(0, 102, 204, 0.6),
+                inset 0 0 15px rgba(0, 102, 204, 0.4);
+        }
+
+        @keyframes frameGlowSmall {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 15px var(--accent-glow),
+                    inset 0 0 15px var(--accent-glow);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 25px var(--accent-color),
+                    inset 0 0 25px var(--accent-color);
+            }
+        }
+
+        .diamond-core-small {
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 70%;
+            height: 70%;
+            background: linear-gradient(135deg, var(--accent-color), #00a86b, #00ff88, #00a86b);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            animation: diamondRotateHorizontalSmall 6s linear infinite;
+            box-shadow: 
+                0 0 25px var(--accent-glow),
+                inset 0 0 15px rgba(255, 255, 255, 0.5);
+            filter: brightness(1.2);
+            transform-style: preserve-3d;
+        }
+
+        [data-theme="light"] .diamond-core-small {
+            background: linear-gradient(135deg, #0066cc, #0088ff, #00aaff, #0088ff);
+            box-shadow: 
+                0 0 25px rgba(0, 102, 204, 0.6),
+                inset 0 0 15px rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes diamondRotateHorizontalSmall {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .project-title-main {
+            font-size: min(2rem, 6vw);
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: var(--font-heading);
+            letter-spacing: -0.01em;
+            margin-bottom: min(10px, 2vh);
+        }
+
+        .project-subtitle {
+            font-size: min(1.2rem, 4vw);
+            color: var(--text-secondary);
+            font-family: var(--font-primary);
+            margin-bottom: min(20px, 3vh);
+            font-weight: 500;
+        }
+
+        /* ДЕТАЛЬНАЯ КАРТОЧКА ПРОЕКТА */
+        .project-detail-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--accent-color);
+            border-radius: min(25px, 5vw);
+            padding: min(40px, 6vw);
+            box-shadow: 0 25px 60px var(--accent-glow);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(20px);
+            margin-top: 0;
+        }
+
+        [data-theme="light"] .project-detail-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 102, 204, 0.4);
+        }
+
+        .project-detail-card.expanded {
+            max-height: 2000px;
+            opacity: 1;
+            transform: translateY(0);
+            margin-top: min(30px, 4vh);
+        }
+
+        .project-detail-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+            transition: left 1.2s ease;
+        }
+
+        .project-detail-card.expanded::before {
+            left: 100%;
+        }
+
+        .project-detail-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: min(30px, 4vh);
+            position: relative;
+            gap: min(20px, 4vw);
+        }
+
+        .project-detail-icon {
+            position: relative;
+            width: min(80px, 16vw);
+            height: min(80px, 16vw);
+            flex-shrink: 0;
+        }
+
+        .project-detail-title {
+            font-size: min(2.2rem, 7vw);
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: var(--font-heading);
+            letter-spacing: -0.01em;
+        }
+
+        .project-detail-subtitle {
+            font-size: min(1.4rem, 5vw);
+            color: var(--accent-color);
+            font-family: var(--font-accent);
+            margin-top: min(5px, 1vh);
+            font-weight: 600;
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            font-size: min(1.1rem, 4vw);
+            line-height: 1.7;
+            margin-bottom: min(30px, 4vh);
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .project-features {
+            list-style: none;
+            margin: min(25px, 4vh) 0;
+        }
+
+        .feature {
+            padding: min(15px, 3vh) 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: min(15px, 3vw);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            font-size: min(1rem, 4vw);
+            font-family: var(--font-primary);
+            font-weight: 500;
+        }
+
+        .feature:last-child {
+            border-bottom: none;
+        }
+
+        .feature::before {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .feature:hover::before {
+            left: 100%;
+        }
+
+        .feature:hover {
+            color: var(--text-primary);
+            transform: translateX(8px);
+        }
+
+        .feature-icon {
+            position: relative;
+            width: min(24px, 5vw);
+            height: min(24px, 5vw);
+            flex-shrink: 0;
+            margin-top: min(2px, 0.5vh);
+        }
+
+        .diamond-feature {
+            width: 100%;
+            height: 100%;
+            background: var(--accent-color);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            animation: diamondPulse 3s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        @keyframes diamondPulse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% { 
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .project-btn {
+            background: linear-gradient(135deg, var(--accent-color), #00a86b);
+            color: white;
+            border: none;
+            padding: min(18px, 4vh) min(30px, 6vw);
+            border-radius: min(12px, 3vw);
+            cursor: pointer;
+            margin-top: min(25px, 4vh);
+            transition: all 0.4s ease;
+            font-weight: 600;
+            font-size: min(1.1rem, 4vw);
+            width: 100%;
+            font-family: var(--font-accent);
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            box-shadow: 0 10px 30px var(--accent-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="light"] .project-btn {
+            background: linear-gradient(135deg, #0066cc, #0088ff);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 102, 204, 0.5);
+        }
+
+        .project-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .project-btn:hover::before {
+            left: 100%;
+        }
+
+        .project-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px var(--accent-glow);
+        }
+
+        /* УВЕДОМЛЕНИЕ БЕЗ ЭФФЕКТА СВЕЧЕНИЯ */
+        .notification {
+            position: fixed;
+            top: max(20px, calc(var(--safe-area-top) + 10px));
+            left: max(20px, var(--safe-area-left));
+            background: var(--card-bg);
+            color: var(--text-primary);
+            padding: min(8px, 2vw) min(12px, 3vw);
+            border-radius: min(8px, 2vw);
+            box-shadow: var(--shadow);
+            z-index: 1001;
+            border-left: 3px solid var(--accent-color);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            max-width: min(250px, 70vw);
+            text-align: left;
+            font-size: min(0.75rem, 3vw);
+            font-weight: 500;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            font-family: var(--font-primary);
+            letter-spacing: 0.01em;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            font-size: min(2rem, 6vw);
+            opacity: 0.1;
+            animation: floatElement 30s linear infinite;
+        }
+
+        .floating-element:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; animation-duration: 25s; }
+        .floating-element:nth-child(2) { top: 20%; left: 90%; animation-delay: 5s; animation-duration: 30s; }
+        .floating-element:nth-child(3) { top: 80%; left: 10%; animation-delay: 10s; animation-duration: 35s; }
+        .floating-element:nth-child(4) { top: 70%; left: 85%; animation-delay: 15s; animation-duration: 28s; }
+        .floating-element:nth-child(5) { top: 40%; left: 15%; animation-delay: 20s; animation-duration: 32s; }
+
+        @keyframes floatElement {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(100px, 50px) rotate(90deg) scale(1.1); }
+            50% { transform: translate(50px, 100px) rotate(180deg) scale(1); }
+            75% { transform: translate(-50px, 50px) rotate(270deg) scale(1.1); }
+        }
+
+        /* СТИЛИ ДЛЯ КРУГЛОЙ АВАТАРКИ */
+        .avatar-container {
+            position: relative;
+            width: min(80px, 16vw);
+            height: min(80px, 16vw);
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 0 20px var(--accent-glow);
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--accent-color), #00a86b);
+            color: white;
+            font-size: min(1.5rem, 4vw);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: max(60px, var(--safe-area-top)) 15px max(30px, var(--safe-area-bottom));
+            }
+            
+            .logo-text {
+                font-size: min(2.8rem, 10vw);
+            }
+            
+            .subtitle {
+                font-size: min(1rem, 4vw);
+            }
+            
+            .projects-container {
+                gap: min(20px, 3vh);
+            }
+            
+            .main-project-card, .project-detail-card {
+                padding: min(25px, 5vw);
+            }
+            
+            .project-detail-header {
+                flex-direction: column;
+                text-align: center;
+                gap: min(15px, 3vh);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: max(50px, var(--safe-area-top)) 10px max(25px, var(--safe-area-bottom));
+            }
+            
+            .logo-text {
+                font-size: min(2.2rem, 9vw);
+                padding: 8px 15px;
+            }
+            
+            .subtitle {
+                font-size: min(0.9rem, 3.5vw);
+                padding: 0 10px;
+            }
+            
+            .main-project-card, .project-detail-card {
+                padding: min(20px, 4vw);
+            }
+            
+            .feature {
+                font-size: min(0.9rem, 3.5vw);
+            }
+            
+            .project-btn {
+                padding: min(15px, 3vh) min(20px, 4vw);
+                font-size: min(0.9rem, 3.5vw);
+            }
+        }
+
+        @media (max-width: 320px) {
+            :root {
+                --safe-area-top: env(safe-area-inset-top, 40px);
+                --dynamic-island-height: 48px;
+            }
+            
+            .container {
+                padding: max(40px, var(--safe-area-top)) 8px max(20px, var(--safe-area-bottom));
+            }
+            
+            .logo-text {
+                font-size: min(1.8rem, 8vw);
+                padding: 5px 10px;
+            }
+            
+            .main-project-card, .project-detail-card {
+                padding: 15px 10px;
+            }
+            
+            .notification {
+                font-size: min(0.65rem, 2.5vw);
+                padding: min(5px, 1.2vw) min(8px, 2vw);
+                max-width: min(200px, 65vw);
+            }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            .container {
+                padding: max(40px, var(--safe-area-top)) 20px max(20px, var(--safe-area-bottom));
+                justify-content: flex-start;
+            }
+            
+            .header {
+                margin-bottom: 20px;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .projects-container {
+                gap: 15px;
+            }
+            
+            .main-project-card, .project-detail-card {
+                padding: 20px;
+            }
+        }
+
+        @media (min-height: 1000px) {
+            .container {
+                padding: max(100px, var(--safe-area-top)) 20px max(60px, var(--safe-area-bottom));
+            }
+        }
+
+        @supports not (top: env(safe-area-inset-top)) {
+            :root {
+                --safe-area-top: 44px;
+                --safe-area-bottom: 34px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Safe area overlays -->
+    <div class="safe-area-top"></div>
+    <div class="safe-area-bottom"></div>
+
+    <!-- ПОСТЕПЕННОЕ РАЗМЫТИЕ ВНИЗУ -->
+    <div class="gradual-blur"></div>
+
+    <!-- УЛУЧШЕННАЯ АНИМАЦИЯ ЗАГРУЗКИ -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="enhanced-loader">
+            <div class="outer-ring"></div>
+            <div class="middle-ring"></div>
+            <div class="diamond-core"></div>
+            <div class="particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+        </div>
+        <div class="loading-text">Kxllstellar</div>
+        <div class="loading-subtext">Загрузка проектов...</div>
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+    </div>
+
+    <!-- Переключатель темы -->
+    <div class="theme-toggle" id="themeToggle">
+        <label class="switch">
+            <input type="checkbox" id="themeInput">
+            <span class="slider round">
+                <div class="sun-moon">
+                    <svg id="light-ray-1" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="12"/>
+                    </svg>
+                    <svg id="light-ray-2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="12"/>
+                    </svg>
+                    <svg id="light-ray-3" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="12"/>
+                    </svg>
+                    <svg id="moon-dot-1" class="moon-dot" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="12"/>
+                    </svg>
+                    <svg id="moon-dot-2" class="moon-dot" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="12"/>
+                    </svg>
+                    <svg id="moon-dot-3" class="moon-dot" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="12"/>
+                    </svg>
+                </div>
+                <div class="stars">
+                    <svg id="star-1" class="star" viewBox="0 0 24 24">
+                        <polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/>
+                    </svg>
+                    <svg id="star-2" class="star" viewBox="0 0 24 24">
+                        <polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/>
+                    </svg>
+                    <svg id="star-3" class="star" viewBox="0 0 24 24">
+                        <polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/>
+                    </svg>
+                    <svg id="star-4" class="star" viewBox="0 0 24 24">
+                        <polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/>
+                    </svg>
+                </div>
+                <svg id="cloud-1" class="cloud-light" viewBox="0 0 24 24">
+                    <path d="M20,17c0,0-1.5-1-3.5-1c-1,0-2,0.5-2.5,1.5c-0.5-1-1.5-1.5-2.5-1.5S9,17,9,17c-2,0-3-2-3-2c-2,0-2,2-2,2 c-1,0-1-2-1-2c-1,0-1,2-1,2H20z"/>
+                </svg>
+                <svg id="cloud-2" class="cloud-light" viewBox="0 0 24 24">
+                    <path d="M20,17c0,0-1.5-1-3.5-1c-1,0-2,0.5-2.5,1.5c-0.5-1-1.5-1.5-2.5-1.5S9,17,9,17c-2,0-3-2-3-2c-2,0-2,2-2,2 c-1,0-1-2-1-2c-1,0-1,2-1,2H20z"/>
+                </svg>
+                <svg id="cloud-3" class="cloud-light" viewBox="0 0 24 24">
+                    <path d="M20,17c0,0-1.5-1-3.5-1c-1,0-2,0.5-2.5,1.5c-0.5-1-1.5-1.5-2.5-1.5S9,17,9,17c-2,0-3-2-3-2c-2,0-2,2-2,2 c-1,0-1-2-1-2c-1,0-1,2-1,2H20z"/>
+                </svg>
+                <svg id="cloud-4" class="cloud-dark" viewBox="0 0 24 24">
+                    <path d="M20,17c0,0-1.5-1-3.5-1c-1,0-2,0.5-2.5,1.5c-0.5-1-1.5-1.5-2.5-1.5S9,17,9,17c-2,0-3-2-3-2c-2,0-2,2-2,2 c-1,0-1-2-1-2c-1,0-1,2-1,2H20z"/>
+                </svg>
+                <svg id="cloud-5" class="cloud-dark" viewBox="0 0 24 24">
+                    <path d="M20,17c0,0-1.5-1-3.5-1c-1,0-2,0.5-2.5,1.5c-0.5-1-1.5-1.5-2.5-1.5S9,17,9,17c-2,0-3-2-3-2c-2,0-2,2-2,2 c-1,0-1-2-1-2c-1,0-1,2-1,2H20z"/>
+                </svg>
+                <svg id="cloud-6" class="cloud-dark" viewBox="0 0 24 24">
+                    <path d="M20,17c0,0-1.5-1-3.5-1c-1,0-2,0.5-2.5,1.5c-0.5-1-1.5-1.5-2.5-1.5S9,17,9,17c-2,0-3-2-3-2c-2,0-2,2-2,2 c-1,0-1-2-1-2c-1,0-1,2-1,2H20z"/>
+                </svg>
+            </span>
+        </label>
+    </div>
+
+    <!-- Анимированный фон -->
+    <div class="background" id="background">
+        <div class="grid-lines"></div>
+        <div class="grid-distortion" id="gridDistortion"></div>
+        <div class="floating-emojis" id="floatingEmojis"></div>
+    </div>
+
+    <!-- Парящие элементы -->
+    <div class="floating-elements">
+        <div class="floating-element">💎</div>
+        <div class="floating-element">💎</div>
+        <div class="floating-element">💎</div>
+        <div class="floating-element">💎</div>
+        <div class="floating-element">💎</div>
+    </div>
+
+    <!-- Уведомление -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Основной контент -->
+    <div class="container" id="mainContainer">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-animation">
+                    <div class="diamond-frame"></div>
+                    <div class="diamond-core-large"></div>
+                </div>
+                <div class="logo-text">KXLLSTELLAR</div>
+            </div>
+            <p class="subtitle">Проект, специализирующийся на социальных сетях.</p>
+        </div>
+
+        <div class="projects-container">
+            <div class="main-project-card" id="mainProjectCard">
+                <div class="project-icon-small">
+                    <div class="diamond-frame-small"></div>
+                    <div class="diamond-core-small"></div>
+                </div>
+                <h2 class="project-title-main">Наши проекты</h2>
+                <p class="project-subtitle">Нажмите что бы открыть список наших проектов.</p>
+            </div>
+
+            <div class="project-detail-card" id="projectDetailCard">
+                <div class="project-detail-header">
+                    <div class="project-detail-icon">
+                        <!-- Заменяем ромб на аватарку -->
+                        <div class="avatar-container" id="avatarContainer">
+                            <div class="avatar-placeholder">Б</div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="project-detail-title">Путеводитель Чатовских</h2>
+                        <p class="project-detail-subtitle">Страничный бот для ВКонтакте</p>
+                    </div>
+                </div>
+                
+                <p class="project-description">
+                    Многофункциональный страничный бот для чатов ВКонтакте с расширенными возможностями модерации и развлечения. 
+                    Бот наводит суету в чатах и не даст вам заскучать, предоставляет полезные команды и создает веселую атмосферу в чате. 
+                    Разработан с использованием современных технологий для обеспечения стабильной работы 24/7.
+                </p>
+                
+                <ul class="project-features">
+                    <li class="feature">
+                        <div class="feature-icon">
+                            <div class="diamond-feature"></div>
+                        </div>
+                        <span>Система модерации с автоматическим удалением нарушений и анти-спам фильтрами</span>
+                    </li>
+                    <li class="feature">
+                        <div class="feature-icon">
+                            <div class="diamond-feature"></div>
+                        </div>
+                        <span>Мини-игры для развлечения участников беседы с системой рейтингов</span>
+                    </li>
+                    <li class="feature">
+                        <div class="feature-icon">
+                            <div class="diamond-feature"></div>
+                        </div>
+                        <span>Детальная статистика активности участников и сообщества</span>
+                    </li>
+                    <li class="feature">
+                        <div class="feature-icon">
+                            <div class="diamond-feature"></div>
+                        </div>
+                        <span>Гибкие настройки и кастомизация команд под ваши нужды</span>
+                    </li>
+                    <li class="feature">
+                        <div class="feature-icon">
+                            <div class="diamond-feature"></div>
+                        </div>
+                        <span>Быстрое реагирование и стабильная работа 24/7 без простоев</span>
+                    </li>
+                </ul>
+                
+                <a href="https://vk.com/id22204798" class="project-btn" target="_blank" id="vkBotLink">
+                    Перейти к боту ВКонтакте
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Список эмодзи для фона
+        const emojis = ['🚀', '💻', '🎮', '🔧', '⚡', '🎯', '🌟', '💎', '🔥', '🎨', '📱', '💾', '🎵', '🎭', '🧩', '🔮', '🎪', '💫', '🌌', '🛸'];
+        
+        // Создание плавающих эмодзи
+        function createFloatingEmojis() {
+            const container = document.getElementById('floatingEmojis');
+            const emojiCount = 15;
+            
+            for (let i = 0; i < emojiCount; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'floating-emoji';
+                
+                // Случайный эмодзи
+                const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.textContent = randomEmoji;
+                
+                // Случайная позиция
+                emoji.style.left = Math.random() * 100 + '%';
+                emoji.style.top = Math.random() * 100 + '%';
+                
+                // Случайная задержка анимации
+                emoji.style.animationDelay = Math.random() * 20 + 's';
+                emoji.style.animationDuration = (20 + Math.random() * 15) + 's';
+                
+                container.appendChild(emoji);
+            }
+        }
+
+        let lastScrollY = 0;
+        let isScrollingDown = false;
+
+        // Инициализация скролла для кнопок - ТОЛЬКО В ВЕРХНЕЙ ЧАСТИ СТРАНИЦЫ
+        function initScrollBehavior() {
+            const themeToggle = document.getElementById('themeToggle');
+            
+            window.addEventListener('scroll', function() {
+                const currentScrollY = window.scrollY;
+                
+                // Показываем кнопку ТОЛЬКО когда пользователь в самом верху страницы
+                if (currentScrollY <= 50) {
+                    themeToggle.classList.remove('hidden');
+                } else {
+                    themeToggle.classList.add('hidden');
+                }
+                
+                lastScrollY = currentScrollY;
+            });
+        }
+
+        // Управление темой
+        function initTheme() {
+            const themeInput = document.getElementById('themeInput');
+            
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            
+            // Установка состояния переключателя
+            if (savedTheme === 'dark') {
+                themeInput.checked = true;
+            } else {
+                themeInput.checked = false;
+            }
+            
+            themeInput.addEventListener('change', () => {
+                const newTheme = themeInput.checked ? 'dark' : 'light';
+                
+                document.body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                showNotification(newTheme === 'dark' ? '🌙 Темная тема включена' : '☀️ Светлая тема включена');
+            });
+        }
+
+        // Управление проектами
+        function initProjects() {
+            const mainProjectCard = document.getElementById('mainProjectCard');
+            const projectDetailCard = document.getElementById('projectDetailCard');
+            
+            mainProjectCard.addEventListener('click', function() {
+                projectDetailCard.classList.toggle('expanded');
+                
+                if (projectDetailCard.classList.contains('expanded')) {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                    this.style.boxShadow = '0 25px 60px var(--accent-glow)';
+                } else {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                }
+            });
+        }
+
+        // Эффект искажения сетки при наведении мыши
+        function initGridDistortion() {
+            const gridDistortion = document.getElementById('gridDistortion');
+            const background = document.getElementById('background');
+            
+            if (window.innerWidth > 768) {
+                background.addEventListener('mousemove', (e) => {
+                    const rect = background.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+                    
+                    gridDistortion.style.setProperty('--mouse-x', `${x}%`);
+                    gridDistortion.style.setProperty('--mouse-y', `${y}%`);
+                    gridDistortion.style.opacity = '1';
+                });
+                
+                background.addEventListener('mouseleave', () => {
+                    gridDistortion.style.opacity = '0';
+                });
+            }
+        }
+
+        // Анимированная загрузка с размытым фоном
+        function initLoading() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const mainContainer = document.getElementById('mainContainer');
+            
+            mainContainer.classList.add('blurred');
+            
+            setTimeout(() => {
+                mainContainer.classList.remove('blurred');
+                
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.backdropFilter = 'blur(0px)';
+                
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 1200);
+            }, 2500);
+        }
+
+        // Показать уведомление с эффектом затухания
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Функция для загрузки локального логотипа
+        function loadLocalLogo() {
+            const avatarContainer = document.getElementById('avatarContainer');
+            
+            try {
+                // Создаем элемент изображения
+                const avatarImg = document.createElement('img');
+                avatarImg.className = 'avatar-image';
+                avatarImg.src = '1_logo_bot.jpg';
+                avatarImg.alt = 'Логотип бота';
+                
+                // Очищаем контейнер и добавляем изображение
+                avatarContainer.innerHTML = '';
+                avatarContainer.appendChild(avatarImg);
+                
+                // Обработка ошибок загрузки изображения
+                avatarImg.onerror = function() {
+                    console.log('Логотип не найден, используем заглушку');
+                    avatarContainer.innerHTML = '<div class="avatar-placeholder">Б</div>';
+                };
+                
+                // Успешная загрузка
+                avatarImg.onload = function() {
+                    console.log('Логотип успешно загружен');
+                };
+                
+            } catch (error) {
+                console.error('Ошибка загрузки логотипа:', error);
+                // В случае ошибки показываем заглушку
+                avatarContainer.innerHTML = '<div class="avatar-placeholder">Б</div>';
+            }
+        }
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('💎 Kxllstellar загружен!');
+            
+            createFloatingEmojis();
+            initTheme();
+            initScrollBehavior();
+            initProjects();
+            initGridDistortion();
+            initLoading();
+            loadLocalLogo(); // Загружаем локальный логотип
+        });
+
+        // Защита от копирования и инспектирования
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            showNotification('🚫 Контекстное меню отключено');
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                (e.ctrlKey && e.key === 'u')
+            ) {
+                e.preventDefault();
+                showNotification('🚫 Инспектирование отключено');
+            }
+        });
+
+        document.addEventListener('copy', function(e) {
+            if (!e.target.classList.contains('project-description') && !e.target.classList.contains('project-btn')) {
+                e.preventDefault();
+                showNotification('🚫 Копирование текста отключено');
+            }
+        });
+
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('paste', function(e) {
+            e.preventDefault();
+            showNotification('🚫 Вставка отключена');
+        });
+
+        document.addEventListener('drop', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
