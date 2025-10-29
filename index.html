@@ -113,6 +113,42 @@
             pointer-events: none;
         }
 
+        /* ПОСТЕПЕННОЕ РАЗМЫТИЕ ВНИЗУ */
+        .gradual-blur {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(
+                to top,
+                var(--bg-primary) 0%,
+                transparent 100%
+            );
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            mask: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 0) 100%
+            );
+            -webkit-mask: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 0) 100%
+            );
+            z-index: 9997;
+            pointer-events: none;
+        }
+
+        [data-theme="light"] .gradual-blur {
+            background: linear-gradient(
+                to top,
+                var(--bg-primary) 0%,
+                transparent 100%
+            );
+        }
+
         /* УЛУЧШЕННАЯ АНИМАЦИЯ ЗАГРУЗКИ */
         .loading-screen {
             position: fixed;
@@ -1561,6 +1597,9 @@
     <!-- Safe area overlays -->
     <div class="safe-area-top"></div>
     <div class="safe-area-bottom"></div>
+
+    <!-- ПОСТЕПЕННОЕ РАЗМЫТИЕ ВНИЗУ -->
+    <div class="gradual-blur"></div>
 
     <!-- УЛУЧШЕННАЯ АНИМАЦИЯ ЗАГРУЗКИ -->
     <div class="loading-screen" id="loadingScreen">
